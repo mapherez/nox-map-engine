@@ -1,0 +1,23 @@
+{
+  "maps": [
+    {
+      "mapId": "local",
+      "title": "Costa de Esmeralda",
+      "currentSnapshotId": "base",
+      "thumbnail": {
+        "uri": "./local/thumbnail.png"
+      },
+      "snapshots": {
+        "base": "./local/map.json"
+      }
+    },
+    {
+      "mapId": "lisbon",
+      "title": "Lisboa",
+      "currentSnapshotId": "base",
+      "snapshots": {
+        "base": "./lisbon/map.json"
+      }
+    }
+  ]
+}

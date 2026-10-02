@@ -1,0 +1,288 @@
+{
+  "schemaVersion": 1,
+  "mapId": "local",
+  "snapshotId": "base",
+  "title": "Costa de Esmeralda",
+  "coordinateSystem": {
+    "kind": "local",
+    "units": "unit"
+  },
+  "bounds": [
+    0,
+    0,
+    1000,
+    800
+  ],
+  "initialView": {
+    "center": [
+      500,
+      400
+    ],
+    "zoom": -0.25
+  },
+  "sources": [
+    {
+      "id": "illustration",
+      "type": "image",
+      "width": 1000,
+      "height": 800,
+      "unitsPerPixel": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "asset": {
+        "uri": "./base.svg"
+      },
+      "attribution": "Mapa demonstrativo · NoX Atlas"
+    }
+  ],
+  "layers": [
+    {
+      "id": "base",
+      "type": "raster",
+      "sourceId": "illustration",
+      "title": "Mapa base",
+      "order": 0,
+      "visible": true,
+      "opacity": 1
+    },
+    {
+      "id": "regions",
+      "title": "Regiões",
+      "type": "vector",
+      "order": 1,
+      "visible": true,
+      "opacity": 1,
+      "style": {
+        "fill": "#a1dfa025",
+        "stroke": "#a6d39a",
+        "strokeWidth": 1.5,
+        "labelMinZoom": 1
+      }
+    },
+    {
+      "id": "points",
+      "title": "Pontos de interesse",
+      "type": "vector",
+      "order": 2,
+      "visible": true,
+      "opacity": 1,
+      "cluster": {
+        "distance": 40
+      },
+      "style": {
+        "labelMinZoom": -0.8
+      }
+    }
+  ],
+  "entities": [
+    {
+      "id": "point",
+      "layerId": "points",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          500,
+          400
+        ]
+      },
+      "label": "Observatório",
+      "metadata": {
+        "Categoria": "Ponto de interesse",
+        "Altitude": "148 m"
+      },
+      "description": "Um ponto elevado sobre a costa. Selecciona entidades para consultar informação e referências externas.",
+      "contentRefs": [
+        {
+          "type": "url",
+          "ref": "https://github.com/mapherez/nox-map-engine",
+          "title": "Ver projecto"
+        }
+      ]
+    },
+    {
+      "id": "region",
+      "layerId": "regions",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              100,
+              100
+            ],
+            [
+              300,
+              100
+            ],
+            [
+              300,
+              300
+            ],
+            [
+              100,
+              300
+            ],
+            [
+              100,
+              100
+            ]
+          ],
+          [
+            [
+              150,
+              150
+            ],
+            [
+              250,
+              150
+            ],
+            [
+              250,
+              250
+            ],
+            [
+              150,
+              250
+            ],
+            [
+              150,
+              150
+            ]
+          ]
+        ]
+      },
+      "label": "Reserva do Vale",
+      "description": "Região interactiva com um buraco central: a área interior fica fora da selecção."
+    },
+    {
+      "id": "harbor",
+      "label": "Porto de Maré",
+      "layerId": "points",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          750,
+          280
+        ]
+      },
+      "metadata": {
+        "Categoria": "Porto"
+      },
+      "description": "O encontro entre a vila e o mar."
+    },
+    {
+      "id": "garden",
+      "label": "Jardim das Fontes",
+      "layerId": "points",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          280,
+          520
+        ]
+      },
+      "style": {
+        "fill": "#ffc978"
+      },
+      "metadata": {
+        "Categoria": "Jardim"
+      }
+    },
+    {
+      "id": "lighthouse",
+      "label": "Farol do Sul",
+      "layerId": "points",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          690,
+          660
+        ]
+      },
+      "description": "Um ponto de referência na costa sul."
+    },
+    {
+      "id": "gate",
+      "label": "Porta da Serra",
+      "layerId": "points",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          420,
+          140
+        ]
+      },
+      "metadata": {
+        "Categoria": "Miradouro"
+      }
+    },
+    {
+      "id": "town",
+      "label": "Vila Antiga",
+      "layerId": "regions",
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                420,
+                300
+              ],
+              [
+                590,
+                280
+              ],
+              [
+                630,
+                460
+              ],
+              [
+                470,
+                490
+              ],
+              [
+                420,
+                300
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                600,
+                520
+              ],
+              [
+                680,
+                490
+              ],
+              [
+                710,
+                570
+              ],
+              [
+                650,
+                600
+              ],
+              [
+                600,
+                520
+              ]
+            ]
+          ]
+        ]
+      },
+      "style": {
+        "stroke": "#ffc978",
+        "fill": "#ffc97820",
+        "labelMinZoom": 1
+      },
+      "metadata": {
+        "Categoria": "Região"
+      }
+    }
+  ]
+}

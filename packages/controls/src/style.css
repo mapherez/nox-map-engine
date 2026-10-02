@@ -1,0 +1,10 @@
+.nox-toolbar { position: absolute; bottom: 28px; right: 24px; display: flex; flex-direction: column; z-index: 5; border: 1px solid #6a807a; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 24px #0004; }
+.nox-toolbar button { border: 0; border-bottom: 1px solid #6a807a; width: 44px; height: 44px; background: #162923; color: #edf4f0; font: 500 1.3rem system-ui; cursor: pointer; }
+.nox-toolbar button:last-child { border-bottom: 0; }
+.nox-toolbar button:hover { background: #25483d; }
+.nox-toolbar button:focus-visible { outline: 3px solid #ffcf70; outline-offset: -3px; }
+.nox-tooltip { position: absolute; z-index: 10; pointer-events: none; max-width: 260px; padding: 8px 12px; border: 1px solid #6a807a; border-radius: 8px; color: #edf4f0; background: #13261ff2; font: 500 .8rem system-ui; box-shadow: 0 6px 24px #0004; }
+.nox-entity-details dl { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 10px; font-size: .85rem; }
+.nox-entity-details dt { color: #a8beb5; }
+.nox-entity-details dd { margin: 0; overflow-wrap: anywhere; }
+.nox-entity-details button { display: block; margin-top: 12px; }

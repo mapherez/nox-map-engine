@@ -1,0 +1,6 @@
+{
+  "name": "@nox-map/cli", "version": "0.1.0", "type": "module",
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "bin": { "nox-map": "./dist/bin.js" }, "files": ["dist"],
+  "dependencies": { "@nox-map/core": "0.1.0", "sharp": "^0.35.0" }
+}

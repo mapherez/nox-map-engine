@@ -1,0 +1,1 @@
+{ "name": "@nox-map/standalone", "version": "0.1.0", "private": true, "type": "module", "dependencies": { "@nox-map/engine": "0.1.0", "@nox-map/core": "0.1.0", "@nox-map/controls": "0.1.0", "@nox-map/data-source-static": "0.1.0" } }

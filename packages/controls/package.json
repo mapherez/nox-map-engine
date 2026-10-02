@@ -1,0 +1,5 @@
+{
+  "name": "@nox-map/controls", "version": "0.1.0", "type": "module",
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" }, "./style.css": "./dist/style.css" },
+  "files": ["dist"], "dependencies": { "@nox-map/core": "0.1.0", "@nox-map/engine": "0.1.0" }
+}

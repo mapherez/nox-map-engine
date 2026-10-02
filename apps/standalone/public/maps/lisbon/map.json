@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "mapId": "lisbon",
+  "snapshotId": "base",
+  "title": "Lisboa",
+  "coordinateSystem": {
+    "kind": "geographic",
+    "crs": "EPSG:4326"
+  },
+  "bounds": [
+    -9.3,
+    38.6,
+    -9,
+    38.85
+  ],
+  "initialView": {
+    "center": [
+      -9.139,
+      38.722
+    ],
+    "zoom": 13
+  },
+  "sources": [
+    {
+      "id": "osm",
+      "type": "xyz",
+      "template": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+      "tileSize": 256,
+      "minLevel": 0,
+      "maxLevel": 19,
+      "attribution": "© OpenStreetMap contributors"
+    }
+  ],
+  "layers": [
+    {
+      "id": "base",
+      "type": "raster",
+      "sourceId": "osm",
+      "title": "Mapa base",
+      "order": 0,
+      "visible": true,
+      "opacity": 1
+    },
+    {
+      "id": "points",
+      "type": "vector",
+      "title": "Pontos de interesse",
+      "order": 1,
+      "visible": true,
+      "opacity": 1,
+      "cluster": {
+        "distance": 40
+      },
+      "style": {
+        "textColor": "#ffffff"
+      }
+    }
+  ],
+  "entities": [
+    {
+      "id": "castle",
+      "layerId": "points",
+      "label": "Castelo de São Jorge",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -9.1335,
+          38.7139
+        ]
+      },
+      "metadata": {
+        "Cidade": "Lisboa"
+      }
+    },
+    {
+      "id": "park",
+      "layerId": "points",
+      "label": "Parque Eduardo VII",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -9.1538,
+          38.7288
+        ]
+      }
+    }
+  ]
+}

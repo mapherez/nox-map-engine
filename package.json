@@ -1,0 +1,36 @@
+{
+  "name": "nox-map-engine-workspace",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev:examples": "vite --config examples/vite.config.ts --host 127.0.0.1",
+    "dev": "vite --config apps/standalone/vite.config.ts --host 127.0.0.1",
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "test:production": "playwright test --config tests/production/playwright.config.ts",
+    "verify:packages": "node scripts/verify-packages.mjs",
+    "benchmark": "playwright test --config benchmarks/playwright.config.ts",
+    "prepare-map": "tsx packages/cli/src/bin.ts",
+    "fixtures": "tsx scripts/fixtures.ts"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@playwright/test": "1.63.0",
+    "@types/node": "26.6.4",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2",
+    "vite": "8.3.2",
+    "vitest": "5.0.3"
+  }
+}

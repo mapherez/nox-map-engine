@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES2022", "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext", "moduleResolution": "Bundler", "strict": true,
+    "skipLibCheck": true, "resolveJsonModule": true, "esModuleInterop": true,
+    "jsx": "react-jsx", "noEmit": true,
+    "paths": {
+      "@nox-map/core": ["./packages/core/src/index.ts"],
+      "@nox-map/engine": ["./packages/engine/src/index.ts"],
+      "@nox-map/renderer-openlayers": ["./packages/renderer-openlayers/src/index.ts"],
+      "@nox-map/data-source-static": ["./packages/data-source-static/src/index.ts"],
+      "@nox-map/controls": ["./packages/controls/src/index.ts"]
+    }
+  },
+  "include": ["packages", "apps", "examples", "scripts", "tests", "benchmarks", "*.ts"]
+}

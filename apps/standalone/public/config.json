@@ -1,0 +1,1 @@
+{ "provider": "static-http", "catalogUrl": "./maps/catalog.json", "gestures": "exclusive" }

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10201b"><title>NoX Atlas — Mapas</title>
+</head>
+<body>
+  <a class="skip-link" href="#map">Saltar para o mapa</a>
+  <header class="app-header">
+    <a class="brand" href="./" aria-label="NoX Atlas, início"><span class="brand-mark" aria-hidden="true">N</span><span>NoX <strong>Atlas</strong></span></a>
+    <span class="header-rule" aria-hidden="true"></span><span class="header-caption">Um lugar para explorar.</span>
+    <button id="share" type="button" class="share-button">Partilhar localização <span aria-hidden="true">↗</span></button>
+  </header>
+  <main class="workspace">
+    <aside class="sidebar" aria-label="Explorar mapas">
+      <div class="sidebar-top"><span class="eyebrow">EXPLORAR</span><h1>Os teus mapas.</h1><p>Encontra um ponto.<br>Descobre o que está à volta.</p></div>
+      <div class="map-picker"><label for="map-select">Mapa activo</label><select id="map-select" disabled><option>A carregar…</option></select></div>
+      <section class="layer-section"><h2>Camadas <span id="layer-count" class="count"></span></h2><div id="layers"></div></section>
+      <section class="entity-section"><h2>Entidades <span id="entity-count" class="count"></span></h2>
+        <label class="visually-hidden" for="search">Pesquisar entidades</label><input id="search" type="search" placeholder="Pesquisar no mapa…" autocomplete="off">
+        <ul id="entities" class="entity-list"></ul>
+        <div class="pagination"><button id="previous" type="button" aria-label="Página anterior">←</button><span id="page-count"></span><button id="next" type="button" aria-label="Página seguinte">→</button></div>
+      </section>
+      <footer class="sidebar-footer"><span class="status-dot" aria-hidden="true"></span><span id="catalog-status">Catálogo de mapas</span></footer>
+    </aside>
+    <section class="map-stage" aria-label="Vista do mapa">
+      <div id="map" aria-describedby="map-help"></div>
+      <div class="map-title"><span class="eyebrow">A TUA VISTA</span><h2 id="map-title">A abrir mapa…</h2><span id="map-subtitle"></span></div>
+      <div id="map-help" class="map-help">Arrasta para explorar <span aria-hidden="true">·</span> Usa a roda para aproximar</div>
+      <div class="map-bottom"><span id="coordinates">—</span><span id="attribution"></span></div>
+      <aside id="details-panel" class="details-panel" aria-label="Detalhes da entidade" hidden><button id="close-details" type="button" class="close-button" aria-label="Fechar detalhes">×</button><div id="details"></div></aside>
+      <div id="message" class="message" role="status" hidden></div>
+    </section>
+  </main>
+  <script type="module" src="./src/main.ts"></script>
+</body>
+</html>

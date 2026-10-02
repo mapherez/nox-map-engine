@@ -1,0 +1,11 @@
+node_modules/
+dist/
+coverage/
+test-results/
+playwright-report/
+.vite/
+*.tsbuildinfo
+artifacts/
+.prepare-*/
+packages/*/tsconfig.build.json
+output/
