@@ -30,6 +30,7 @@ import KeyboardZoom from 'ol/interaction/KeyboardZoom.js';
 import type MapBrowserEvent from 'ol/MapBrowserEvent.js';
 import { project, unproject, projectBounds, zoomResolution, resolutionZoom, type Bounds, type Camera, type Entity, type EntityStyle, type Hit, type LayerState, type MapDataSource, type MapLayer, type MapSnapshot, type Paint, type Position, type RasterSource, type RendererCallbacks, type RendererPort } from '@nox-map/core';
 import { AssetLoader } from './assets.js';
+import { en as locale } from './locales/en.js';
 export type StyleResolver = (entity: Readonly<Entity>, context: { zoom: number; state: 'normal' | 'hover' | 'selected' }) => EntityStyle | undefined;
 export interface RendererOptions { gestures?: 'exclusive' | 'cooperative'; profile?: 'desktop' | 'mobile'; maxPixelRatio?: number; style?: StyleResolver }
 interface VectorRecord { points: VectorSource<Feature<OlGeometry>>; polygons: VectorSource<Feature<OlGeometry>>; cluster?: Cluster; layers: BaseLayer[] }
@@ -72,7 +73,7 @@ export class OpenLayersRenderer implements RendererPort {
     this.container = container; this.callbacks = callbacks;
     this.mobile = this.options.profile === 'mobile' || (!this.options.profile && matchMedia('(pointer: coarse)').matches);
     this.previousAttributes = { className: container.className, tabIndex: container.getAttribute('tabindex'), role: container.getAttribute('role'), label: container.getAttribute('aria-label'), touchAction: container.style.touchAction };
-    container.classList.add('nox-map'); container.tabIndex = 0; container.setAttribute('role', 'region'); container.setAttribute('aria-label', 'Interactive map');
+    container.classList.add('nox-map'); container.tabIndex = 0; container.setAttribute('role', 'region'); container.setAttribute('aria-label', locale.interactiveMap);
     const cooperative = (this.options.gestures ?? 'cooperative') === 'cooperative';
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const interactions = defaultInteractions({ altShiftDragRotate: false, pinchRotate: false, onFocusOnly: cooperative, dragPan: !reducedMotion, keyboard: !reducedMotion, zoomDuration: reducedMotion ? 0 : 250 });

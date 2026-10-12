@@ -1,3 +1,4 @@
+import { enDemo as locale } from '../apps/standalone/src/locales/en-demo.js';
 import sharp from 'sharp';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -6,19 +7,20 @@ import { prepareMap } from '../packages/cli/src/index.js';
 import type { MapSnapshot } from '@nox-map/core';
 const root = 'apps/standalone/public/maps';
 await mkdir(join(root, 'local'), { recursive: true }); await mkdir(join(root, 'lisbon'), { recursive: true });
-const map = fixture(); map.title = 'Costa de Esmeralda'; map.initialView = { center: [500, 400], zoom: -.25 };
-map.sources = [{ id: 'illustration', type: 'image', width: 1000, height: 800, unitsPerPixel: 1, origin: [0, 0], asset: { uri: './base.svg' }, attribution: 'Mapa demonstrativo · NoX Atlas' }];
-map.layers.unshift({ id: 'base', type: 'raster', sourceId: 'illustration', title: 'Mapa base', order: 0, visible: true, opacity: 1 });
+const map = fixture(); map.title = locale.emeraldCoast; map.initialView = { center: [500, 400], zoom: -.25 };
+map.sources = [{ id: 'illustration', type: 'image', width: 1000, height: 800, unitsPerPixel: 1, origin: [0, 0], asset: { uri: './base.svg' }, attribution: locale.demoAttribution }];
+map.layers.unshift({ id: 'base', type: 'raster', sourceId: 'illustration', title: locale.baseMap, order: 0, visible: true, opacity: 1 });
+map.layers[1].title = locale.regions; map.layers[2].title = locale.pointsOfInterest;
 map.layers[1].style = { fill: '#a1dfa025', stroke: '#a6d39a', strokeWidth: 1.5, labelMinZoom: 1 };
 if (map.layers[2].type === 'vector') map.layers[2].cluster = { distance: 40 }; map.layers[2].style = { labelMinZoom: -.8 };
-map.entities[0] = { ...map.entities[0], label: 'Observatório', description: 'Um ponto elevado sobre a costa. Selecciona entidades para consultar informação e referências externas.', metadata: { Categoria: 'Ponto de interesse', Altitude: '148 m' }, contentRefs: [{ type: 'url', ref: 'https://github.com/mapherez/nox-map-engine', title: 'Ver projecto' }] };
-map.entities[1].label = 'Reserva do Vale'; map.entities[1].description = 'Região interactiva com um buraco central: a área interior fica fora da selecção.';
+map.entities[0] = { ...map.entities[0], label: locale.observatory, description: locale.observatoryDescription, metadata: { [locale.category]: locale.pointOfInterest, [locale.altitude]: locale.observatoryAltitude }, contentRefs: [{ type: 'url', ref: 'https://github.com/mapherez/nox-map-engine', title: locale.viewProject }] };
+map.entities[1].label = locale.valleyReserve; map.entities[1].description = locale.valleyDescription;
 map.entities.push(
-  { id: 'harbor', label: 'Porto de Maré', layerId: 'points', geometry: { type: 'Point', coordinates: [750, 280] }, metadata: { Categoria: 'Porto' }, description: 'O encontro entre a vila e o mar.' },
-  { id: 'garden', label: 'Jardim das Fontes', layerId: 'points', geometry: { type: 'Point', coordinates: [280, 520] }, style: { fill: '#ffc978' }, metadata: { Categoria: 'Jardim' } },
-  { id: 'lighthouse', label: 'Farol do Sul', layerId: 'points', geometry: { type: 'Point', coordinates: [690, 660] }, description: 'Um ponto de referência na costa sul.' },
-  { id: 'gate', label: 'Porta da Serra', layerId: 'points', geometry: { type: 'Point', coordinates: [420, 140] }, metadata: { Categoria: 'Miradouro' } },
-  { id: 'town', label: 'Vila Antiga', layerId: 'regions', geometry: { type: 'MultiPolygon', coordinates: [[[[420, 300], [590, 280], [630, 460], [470, 490], [420, 300]]], [[[600, 520], [680, 490], [710, 570], [650, 600], [600, 520]]]] }, style: { stroke: '#ffc978', fill: '#ffc97820', labelMinZoom: 1 }, metadata: { Categoria: 'Região' } }
+  { id: 'harbor', label: locale.harbor, layerId: 'points', geometry: { type: 'Point', coordinates: [750, 280] }, metadata: { [locale.category]: locale.harborCategory }, description: locale.harborDescription },
+  { id: 'garden', label: locale.garden, layerId: 'points', geometry: { type: 'Point', coordinates: [280, 520] }, style: { fill: '#ffc978' }, metadata: { [locale.category]: locale.gardenCategory } },
+  { id: 'lighthouse', label: locale.lighthouse, layerId: 'points', geometry: { type: 'Point', coordinates: [690, 660] }, description: locale.lighthouseDescription },
+  { id: 'gate', label: locale.gate, layerId: 'points', geometry: { type: 'Point', coordinates: [420, 140] }, metadata: { [locale.category]: locale.viewpoint } },
+  { id: 'town', label: locale.oldTown, layerId: 'regions', geometry: { type: 'MultiPolygon', coordinates: [[[[420, 300], [590, 280], [630, 460], [470, 490], [420, 300]]], [[[600, 520], [680, 490], [710, 570], [650, 600], [600, 520]]]] }, style: { stroke: '#ffc978', fill: '#ffc97820', labelMinZoom: 1 }, metadata: { [locale.category]: locale.region } }
 );
 await writeFile(join(root, 'local/map.json'), JSON.stringify(map, null, 2) + '\n');
 const buildings = Array.from({ length: 85 }, (_, i) => {
@@ -36,17 +38,17 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="800" v
 <g stroke="#a6a58b" fill="none"><path d="M-50 180Q270 450 420 140T850 -50M280 850Q280 520 500 400T800 260M690 660Q510 590 500 400T520 -30" stroke="#243b2d" stroke-width="16"/><path d="M-50 180Q270 450 420 140T850 -50M280 850Q280 520 500 400T800 260M690 660Q510 590 500 400T520 -30" stroke-width="5"/>
 <path d="M360 210L710 550M330 300L640 610M300 400L580 700M320 510L780 260M300 600L740 360M400 690L720 470" stroke="#94a081" stroke-opacity=".38" stroke-width="3"/></g>${buildings}
 <g stroke="#8d9e83" stroke-width="8"><path d="M752 263l95 -24M762 280l92 -15M771 300l72 -8"/></g>
-<g font-family="system-ui,sans-serif" fill="#bcceaf" opacity=".5" font-size="13" letter-spacing="4"><text x="390" y="590">VILA ANTIGA</text><text x="100" y="80">SERRA DO VALE</text><text x="875" y="440" transform="rotate(90 875 440)">MAR DE ESMERALDA</text></g>
+<g font-family="system-ui,sans-serif" fill="#bcceaf" opacity=".5" font-size="13" letter-spacing="4"><text x="390" y="590">${locale.oldTownMapLabel}</text><text x="100" y="80">${locale.valleyHillsMapLabel}</text><text x="875" y="440" transform="rotate(90 875 440)">${locale.emeraldSeaMapLabel}</text></g>
 </svg>`;
 await writeFile(join(root, 'local/base.svg'), svg);
 await sharp(Buffer.from(svg)).resize(400).png().toFile(join(root, 'local/thumbnail.png'));
 await sharp(Buffer.from(svg)).resize(256, 256, { fit: 'cover' }).png().toFile(join(root, 'local/benchmark-tile.png'));
 const geographic: MapSnapshot = {
-  schemaVersion: 1, mapId: 'lisbon', snapshotId: 'base', title: 'Lisboa', coordinateSystem: { kind: 'geographic', crs: 'EPSG:4326' },
+  schemaVersion: 1, mapId: 'lisbon', snapshotId: 'base', title: locale.lisbon, coordinateSystem: { kind: 'geographic', crs: 'EPSG:4326' },
   bounds: [-9.3, 38.6, -9.0, 38.85], initialView: { center: [-9.139, 38.722], zoom: 13 },
-  sources: [{ id: 'osm', type: 'xyz', template: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', tileSize: 256, minLevel: 0, maxLevel: 19, attribution: '© OpenStreetMap contributors' }],
-  layers: [{ id: 'base', type: 'raster', sourceId: 'osm', title: 'Mapa base', order: 0, visible: true, opacity: 1 }, { id: 'points', type: 'vector', title: 'Pontos de interesse', order: 1, visible: true, opacity: 1, cluster: { distance: 40 }, style: { textColor: '#ffffff' } }],
-  entities: [{ id: 'castle', layerId: 'points', label: 'Castelo de São Jorge', geometry: { type: 'Point', coordinates: [-9.1335, 38.7139] }, metadata: { Cidade: 'Lisboa' } }, { id: 'park', layerId: 'points', label: 'Parque Eduardo VII', geometry: { type: 'Point', coordinates: [-9.1538, 38.7288] } }]
+  sources: [{ id: 'osm', type: 'xyz', template: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', tileSize: 256, minLevel: 0, maxLevel: 19, attribution: locale.osmAttribution }],
+  layers: [{ id: 'base', type: 'raster', sourceId: 'osm', title: locale.baseMap, order: 0, visible: true, opacity: 1 }, { id: 'points', type: 'vector', title: locale.pointsOfInterest, order: 1, visible: true, opacity: 1, cluster: { distance: 40 }, style: { textColor: '#ffffff' } }],
+  entities: [{ id: 'castle', layerId: 'points', label: locale.castle, geometry: { type: 'Point', coordinates: [-9.1335, 38.7139] }, metadata: { [locale.city]: locale.lisbon } }, { id: 'park', layerId: 'points', label: locale.park, geometry: { type: 'Point', coordinates: [-9.1538, 38.7288] } }]
 };
 await writeFile(join(root, 'lisbon/map.json'), JSON.stringify(geographic, null, 2) + '\n');
 await writeFile(join(root, 'catalog.json'), JSON.stringify({ maps: [

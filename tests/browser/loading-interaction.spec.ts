@@ -12,6 +12,6 @@ test('selects a point when a pending base image completes between click and sing
   if (info.project.name === 'mobile-chromium') await page.touchscreen.tap(box.x + pixel[0], box.y + pixel[1]);
   else await page.mouse.click(box.x + pixel[0], box.y + pixel[1]);
   releaseImage(); await response;
-  await expect(page.locator('#details h2')).toHaveText('Observatório');
+  await expect(page.locator('#details h2')).toHaveText('Observatory');
   expect(await page.evaluate(() => window.noxEngine.getState().selectedEntityId)).toBe('point');
 });

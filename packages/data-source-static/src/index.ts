@@ -1,3 +1,4 @@
+import { en as locale } from './locales/en.js';
 import { MapError, validateSnapshot, type AssetRef, type MapDataSource, type MapSnapshot, type MapSummary } from '@nox-map/core';
 export interface CatalogEntry extends MapSummary { currentSnapshotId: string; snapshots: Record<string, string> }
 export interface StaticCatalog { maps: CatalogEntry[] }
@@ -19,16 +20,16 @@ export class StaticHttpDataSource implements MapDataSource {
   private async response(url: string, signal: AbortSignal): Promise<Response> {
     signal.throwIfAborted();
     const response = await this.request(url, signal); signal.throwIfAborted();
-    if (!response.ok) throw new MapError(response.status === 401 || response.status === 403 ? 'UNAUTHORIZED' : response.status === 404 ? 'NOT_FOUND' : 'HTTP_ERROR', `${response.status} while loading resource`);
+    if (!response.ok) throw new MapError(response.status === 401 || response.status === 403 ? 'UNAUTHORIZED' : response.status === 404 ? 'NOT_FOUND' : 'HTTP_ERROR', locale.httpError(response.status));
     return response;
   }
   private async catalog(signal: AbortSignal): Promise<StaticCatalog> {
     const raw: unknown = await (await this.response(this.catalogUrl, signal)).json(); signal.throwIfAborted();
-    if (!raw || typeof raw !== 'object' || !Array.isArray((raw as StaticCatalog).maps)) throw new MapError('INVALID_CATALOG', 'Catalog must contain maps[]');
+    if (!raw || typeof raw !== 'object' || !Array.isArray((raw as StaticCatalog).maps)) throw new MapError('INVALID_CATALOG', locale.missingCatalogMaps);
     const ids = new Set<string>();
     for (const entry of (raw as StaticCatalog).maps) {
-      if (!entry || typeof entry.mapId !== 'string' || !entry.mapId || ids.has(entry.mapId) || typeof entry.title !== 'string' || typeof entry.currentSnapshotId !== 'string' || !entry.snapshots || typeof entry.snapshots !== 'object' || !Object.hasOwn(entry.snapshots, entry.currentSnapshotId)) throw new MapError('INVALID_CATALOG', 'Invalid map identity or current snapshot');
-      if (Object.values(entry.snapshots).some(v => typeof v !== 'string' || !v)) throw new MapError('INVALID_CATALOG', 'Snapshot locations must be strings');
+      if (!entry || typeof entry.mapId !== 'string' || !entry.mapId || ids.has(entry.mapId) || typeof entry.title !== 'string' || typeof entry.currentSnapshotId !== 'string' || !entry.snapshots || typeof entry.snapshots !== 'object' || !Object.hasOwn(entry.snapshots, entry.currentSnapshotId)) throw new MapError('INVALID_CATALOG', locale.invalidCatalogIdentity);
+      if (Object.values(entry.snapshots).some(v => typeof v !== 'string' || !v)) throw new MapError('INVALID_CATALOG', locale.invalidSnapshotLocations);
       ids.add(entry.mapId);
     }
     return raw as StaticCatalog;
@@ -38,15 +39,15 @@ export class StaticHttpDataSource implements MapDataSource {
   }
   async getSnapshot(request: { mapId: string; snapshotId?: string }, { signal }: { signal: AbortSignal }): Promise<MapSnapshot> {
     const entry = (await this.catalog(signal)).maps.find(m => m.mapId === request.mapId);
-    if (!entry) throw new MapError('NOT_FOUND', 'Map not found');
+    if (!entry) throw new MapError('NOT_FOUND', locale.mapNotFound);
     const snapshotId = request.snapshotId ?? entry.currentSnapshotId;
-    if (!Object.hasOwn(entry.snapshots, snapshotId)) throw new MapError('NOT_FOUND', 'Snapshot not found');
+    if (!Object.hasOwn(entry.snapshots, snapshotId)) throw new MapError('NOT_FOUND', locale.snapshotNotFound);
     const url = absolute(entry.snapshots[snapshotId], this.catalogUrl);
     const raw = await (await this.response(url, signal)).json() as Record<string, unknown>;
     if (typeof raw.entitiesUrl === 'string') raw.entities = await (await this.response(absolute(raw.entitiesUrl, url), signal)).json();
     signal.throwIfAborted();
     const snapshot = validateSnapshot(raw);
-    if (snapshot.mapId !== request.mapId || snapshot.snapshotId !== snapshotId) throw new MapError('IDENTITY_MISMATCH', 'Manifest identity does not match catalog');
+    if (snapshot.mapId !== request.mapId || snapshot.snapshotId !== snapshotId) throw new MapError('IDENTITY_MISMATCH', locale.identityMismatch);
     const resolveStyle = (style: import('@nox-map/core').EntityStyle | undefined) => {
       if (!style) return;
       for (const paint of [style, style.hover, style.selected]) if (paint?.icon) paint.icon.uri = absolute(paint.icon.uri, url);
@@ -72,7 +73,7 @@ export class MemoryDataSource implements MapDataSource {
       const snapshot = validateSnapshot(value);
       let versions = this.snapshots.get(snapshot.mapId);
       if (!versions) { versions = new Map(); this.snapshots.set(snapshot.mapId, versions); }
-      if (versions.has(snapshot.snapshotId)) throw new MapError('DUPLICATE_ID', 'Duplicate map snapshot');
+      if (versions.has(snapshot.snapshotId)) throw new MapError('DUPLICATE_ID', locale.duplicateMapSnapshot);
       versions.set(snapshot.snapshotId, snapshot); this.current.set(snapshot.mapId, snapshot.snapshotId);
     }
   }
@@ -81,11 +82,11 @@ export class MemoryDataSource implements MapDataSource {
   }
   async getSnapshot(request: { mapId: string; snapshotId?: string }, { signal }: { signal: AbortSignal }): Promise<MapSnapshot> {
     signal.throwIfAborted(); const snapshot = this.snapshots.get(request.mapId)?.get(request.snapshotId ?? this.current.get(request.mapId)!);
-    if (!snapshot) throw new MapError('NOT_FOUND', 'Map or snapshot not found');
+    if (!snapshot) throw new MapError('NOT_FOUND', locale.mapOrSnapshotNotFound);
     return structuredClone(snapshot);
   }
   async fetchAsset(ref: AssetRef, { signal }: { mapId: string; snapshotId: string; signal: AbortSignal }): Promise<Blob> {
     signal.throwIfAborted(); const asset = this.assets.get(ref.uri);
-    if (!asset) throw new MapError('NOT_FOUND', 'Asset not found'); return asset;
+    if (!asset) throw new MapError('NOT_FOUND', locale.assetNotFound); return asset;
   }
 }

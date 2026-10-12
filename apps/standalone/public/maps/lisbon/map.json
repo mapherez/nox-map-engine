@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "mapId": "lisbon",
   "snapshotId": "base",
-  "title": "Lisboa",
+  "title": "Lisbon",
   "coordinateSystem": {
     "kind": "geographic",
     "crs": "EPSG:4326"
@@ -36,7 +36,7 @@
       "id": "base",
       "type": "raster",
       "sourceId": "osm",
-      "title": "Mapa base",
+      "title": "Base map",
       "order": 0,
       "visible": true,
       "opacity": 1
@@ -44,7 +44,7 @@
     {
       "id": "points",
       "type": "vector",
-      "title": "Pontos de interesse",
+      "title": "Points of interest",
       "order": 1,
       "visible": true,
       "opacity": 1,
@@ -60,7 +60,7 @@
     {
       "id": "castle",
       "layerId": "points",
-      "label": "Castelo de São Jorge",
+      "label": "Saint George Castle",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -69,13 +69,13 @@
         ]
       },
       "metadata": {
-        "Cidade": "Lisboa"
+        "City": "Lisbon"
       }
     },
     {
       "id": "park",
       "layerId": "points",
-      "label": "Parque Eduardo VII",
+      "label": "Edward VII Park",
       "geometry": {
         "type": "Point",
         "coordinates": [

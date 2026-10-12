@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import type { MapEngine } from '@nox-map/engine';
 declare global { interface Window { noxEngine: MapEngine } }
 test('unlabelled singleton clusters retain each point geometry', async ({ page }) => {
-  await page.goto('/'); await expect(page.locator('#map-title')).toHaveText('Costa de Esmeralda');
+  await page.goto('/'); await expect(page.locator('#map-title')).toHaveText('Emerald Coast');
   const results = await page.evaluate(async () => {
     const engine = window.noxEngine;
     engine.upsertEntities([
@@ -17,7 +17,7 @@ test('unlabelled singleton clusters retain each point geometry', async ({ page }
 });
 test('hiding or removing a hovered entity disposes its tooltip', async ({ page }, info) => {
   test.skip(info.project.name === 'mobile-chromium', 'Touch does not expose hover');
-  await page.goto('/'); await expect(page.locator('#map-title')).toHaveText('Costa de Esmeralda');
+  await page.goto('/'); await expect(page.locator('#map-title')).toHaveText('Emerald Coast');
   const pixel = await page.evaluate(() => window.noxEngine.mapToScreen([500, 400])!);
   const box = (await page.locator('#map').boundingBox())!;
   await page.mouse.move(box.x + pixel[0], box.y + pixel[1]); await expect(page.locator('.nox-tooltip')).toBeVisible();

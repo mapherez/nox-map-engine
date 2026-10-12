@@ -1,34 +1,34 @@
 <!doctype html>
-<html lang="pt-PT">
+<html lang="%locale.language%">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#10201b"><title>NoX Atlas — Mapas</title>
+  <meta name="theme-color" content="#10201b"><title>%locale.pageTitle%</title>
 </head>
 <body>
-  <a class="skip-link" href="#map">Saltar para o mapa</a>
+  <a class="skip-link" href="#map">%locale.skipToMap%</a>
   <header class="app-header">
-    <a class="brand" href="./" aria-label="NoX Atlas, início"><span class="brand-mark" aria-hidden="true">N</span><span>NoX <strong>Atlas</strong></span></a>
-    <span class="header-rule" aria-hidden="true"></span><span class="header-caption">Um lugar para explorar.</span>
-    <button id="share" type="button" class="share-button">Partilhar localização <span aria-hidden="true">↗</span></button>
+    <a class="brand" href="./" aria-label="%locale.home%"><span class="brand-mark" aria-hidden="true">%locale.brandMark%</span><span>%locale.brandName% <strong>%locale.brandAtlas%</strong></span></a>
+    <span class="header-rule" aria-hidden="true"></span><span class="header-caption">%locale.headerCaption%</span>
+    <button id="share" type="button" class="share-button">%locale.shareLocation% <span aria-hidden="true">↗</span></button>
   </header>
   <main class="workspace">
-    <aside class="sidebar" aria-label="Explorar mapas">
-      <div class="sidebar-top"><span class="eyebrow">EXPLORAR</span><h1>Os teus mapas.</h1><p>Encontra um ponto.<br>Descobre o que está à volta.</p></div>
-      <div class="map-picker"><label for="map-select">Mapa activo</label><select id="map-select" disabled><option>A carregar…</option></select></div>
-      <section class="layer-section"><h2>Camadas <span id="layer-count" class="count"></span></h2><div id="layers"></div></section>
-      <section class="entity-section"><h2>Entidades <span id="entity-count" class="count"></span></h2>
-        <label class="visually-hidden" for="search">Pesquisar entidades</label><input id="search" type="search" placeholder="Pesquisar no mapa…" autocomplete="off">
+    <aside class="sidebar" aria-label="%locale.exploreMaps%">
+      <div class="sidebar-top"><span class="eyebrow">%locale.explore%</span><h1>%locale.yourMaps%</h1><p>%locale.findPoint%<br>%locale.discoverSurroundings%</p></div>
+      <div class="map-picker"><label for="map-select">%locale.activeMap%</label><select id="map-select" disabled><option>%locale.loading%</option></select></div>
+      <section class="layer-section"><h2>%locale.layers% <span id="layer-count" class="count"></span></h2><div id="layers"></div></section>
+      <section class="entity-section"><h2>%locale.entities% <span id="entity-count" class="count"></span></h2>
+        <label class="visually-hidden" for="search">%locale.searchEntities%</label><input id="search" type="search" placeholder="%locale.searchPlaceholder%" autocomplete="off">
         <ul id="entities" class="entity-list"></ul>
-        <div class="pagination"><button id="previous" type="button" aria-label="Página anterior">←</button><span id="page-count"></span><button id="next" type="button" aria-label="Página seguinte">→</button></div>
+        <div class="pagination"><button id="previous" type="button" aria-label="%locale.previousPage%">←</button><span id="page-count"></span><button id="next" type="button" aria-label="%locale.nextPage%">→</button></div>
       </section>
-      <footer class="sidebar-footer"><span class="status-dot" aria-hidden="true"></span><span id="catalog-status">Catálogo de mapas</span></footer>
+      <footer class="sidebar-footer"><span class="status-dot" aria-hidden="true"></span><span id="catalog-status">%locale.mapCatalog%</span></footer>
     </aside>
-    <section class="map-stage" aria-label="Vista do mapa">
+    <section class="map-stage" aria-label="%locale.mapView%">
       <div id="map" aria-describedby="map-help"></div>
-      <div class="map-title"><span class="eyebrow">A TUA VISTA</span><h2 id="map-title">A abrir mapa…</h2><span id="map-subtitle"></span></div>
-      <div id="map-help" class="map-help">Arrasta para explorar <span aria-hidden="true">·</span> Usa a roda para aproximar</div>
+      <div class="map-title"><span class="eyebrow">%locale.yourView%</span><h2 id="map-title">%locale.openingMap%</h2><span id="map-subtitle"></span></div>
+      <div id="map-help" class="map-help">%locale.dragHelp% <span aria-hidden="true">·</span> %locale.zoomHelp%</div>
       <div class="map-bottom"><span id="coordinates">—</span><span id="attribution"></span></div>
-      <aside id="details-panel" class="details-panel" aria-label="Detalhes da entidade" hidden><button id="close-details" type="button" class="close-button" aria-label="Fechar detalhes">×</button><div id="details"></div></aside>
+      <aside id="details-panel" class="details-panel" aria-label="%locale.entityDetails%" hidden><button id="close-details" type="button" class="close-button" aria-label="%locale.closeDetails%">×</button><div id="details"></div></aside>
       <div id="message" class="message" role="status" hidden></div>
     </section>
   </main>

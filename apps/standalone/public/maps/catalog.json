@@ -2,7 +2,7 @@
   "maps": [
     {
       "mapId": "local",
-      "title": "Costa de Esmeralda",
+      "title": "Emerald Coast",
       "currentSnapshotId": "base",
       "thumbnail": {
         "uri": "./local/thumbnail.png"
@@ -13,7 +13,7 @@
     },
     {
       "mapId": "lisbon",
-      "title": "Lisboa",
+      "title": "Lisbon",
       "currentSnapshotId": "base",
       "snapshots": {
         "base": "./lisbon/map.json"

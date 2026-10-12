@@ -1,9 +1,10 @@
+import { en as locale } from './locales/en.js';
 import { z } from 'zod';
 import type { Entity, MapSnapshot } from './types.js';
 const num = z.number().finite();
 const id = z.string().min(1).max(256);
 export const positionSchema = z.tuple([num, num]);
-const boundsSchema = z.tuple([num, num, num, num]).refine(b => b[0] < b[2] && b[1] < b[3], 'Bounds must have positive width and height');
+const boundsSchema = z.tuple([num, num, num, num]).refine(b => b[0] < b[2] && b[1] < b[3], locale.invalidBounds);
 export const cameraSchema = z.object({ center: positionSchema, zoom: num.min(-40).max(40) });
 const asset = z.object({ uri: z.string().min(1) });
 const paintFields = {
@@ -14,7 +15,7 @@ const paintFields = {
 };
 const paint = z.object(paintFields);
 const style = z.object({ ...paintFields, hover: paint.optional(), selected: paint.optional() });
-const ring = z.array(positionSchema).min(4).refine(r => r[0][0] === r.at(-1)![0] && r[0][1] === r.at(-1)![1], 'Polygon rings must be closed');
+const ring = z.array(positionSchema).min(4).refine(r => r[0][0] === r.at(-1)![0] && r[0][1] === r.at(-1)![1], locale.unclosedRing);
 const polygon = z.array(ring).min(1);
 export const geometrySchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('Point'), coordinates: positionSchema }),
@@ -28,7 +29,7 @@ export const entitySchema = z.object({
 });
 const placement = { origin: positionSchema, width: num.int().positive(), height: num.int().positive(), unitsPerPixel: num.positive() };
 const sourceCommon = { id, attribution: z.string().optional() };
-const template = z.string().refine(s => ['{z}', '{x}', '{y}'].every(t => s.includes(t)), 'Template needs {z}, {x}, {y}');
+const template = z.string().refine(s => ['{z}', '{x}', '{y}'].every(t => s.includes(t)), locale.invalidTileTemplate);
 const tileSize = z.union([z.literal(256), z.literal(512)]);
 const level = num.int().min(0).max(30);
 const sourceSchema = z.discriminatedUnion('type', [
@@ -57,17 +58,17 @@ export function validateSnapshot(input: unknown): MapSnapshot {
   const s = result.data as MapSnapshot;
   for (const items of [s.sources, s.layers, s.entities]) {
     const ids = new Set<string>();
-    for (const item of items) { if (ids.has(item.id)) throw new MapError('DUPLICATE_ID', `Duplicate ID: ${item.id}`); ids.add(item.id); }
+    for (const item of items) { if (ids.has(item.id)) throw new MapError('DUPLICATE_ID', locale.duplicateId(item.id)); ids.add(item.id); }
   }
-  if ((s.minZoom ?? -40) > (s.maxZoom ?? 40)) throw new MapError('INVALID_ZOOM', 'minZoom exceeds maxZoom');
+  if ((s.minZoom ?? -40) > (s.maxZoom ?? 40)) throw new MapError('INVALID_ZOOM', locale.invertedZoomRange);
   for (const source of s.sources) {
-    if ((source.type === 'xyz') !== (s.coordinateSystem.kind === 'geographic')) throw new MapError('INCOMPATIBLE_SOURCE', `Source ${source.id} is incompatible with map coordinates`);
-    if (source.type === 'xyz' && source.minLevel > source.maxLevel) throw new MapError('INVALID_SOURCE', 'minLevel exceeds maxLevel');
-    if (source.type === 'image' && source.width * source.height > 16_777_216) throw new MapError('IMAGE_TOO_LARGE', 'Prepare this image as a raster-pyramid (small images are limited to 16M pixels)');
+    if ((source.type === 'xyz') !== (s.coordinateSystem.kind === 'geographic')) throw new MapError('INCOMPATIBLE_SOURCE', locale.incompatibleSource(source.id));
+    if (source.type === 'xyz' && source.minLevel > source.maxLevel) throw new MapError('INVALID_SOURCE', locale.invertedLevels);
+    if (source.type === 'image' && source.width * source.height > 16_777_216) throw new MapError('IMAGE_TOO_LARGE', locale.imageTooLarge);
   }
   for (const layer of s.layers) {
-    if (layer.type === 'raster' && !s.sources.some(source => source.id === layer.sourceId)) throw new MapError('MISSING_SOURCE', `Layer ${layer.id}: source not found`);
-    if ((layer.minZoom ?? -40) > (layer.maxZoom ?? 40)) throw new MapError('INVALID_ZOOM', `Layer ${layer.id}: inverted zoom range`);
+    if (layer.type === 'raster' && !s.sources.some(source => source.id === layer.sourceId)) throw new MapError('MISSING_SOURCE', locale.missingLayerSource(layer.id));
+    if ((layer.minZoom ?? -40) > (layer.maxZoom ?? 40)) throw new MapError('INVALID_ZOOM', locale.invertedLayerZoom(layer.id));
   }
   for (const entity of s.entities) validateEntityContext(entity, s);
   if (s.coordinateSystem.kind === 'geographic') {
@@ -81,17 +82,17 @@ export function positions(entity: Entity): [number, number][] {
   return g.type === 'Point' ? [g.coordinates] : g.type === 'Polygon' ? g.coordinates.flat() : g.coordinates.flat(2);
 }
 export function validateGeographicPosition(p: [number, number]): void {
-  if (Math.abs(p[0]) > 180 || Math.abs(p[1]) > 85.0511287798066) throw new MapError('UNSUPPORTED_COORDINATE', 'Coordinates exceed the Web Mercator domain');
+  if (Math.abs(p[0]) > 180 || Math.abs(p[1]) > 85.0511287798066) throw new MapError('UNSUPPORTED_COORDINATE', locale.unsupportedCoordinates);
 }
 export function validateEntityContext(entity: Entity, snapshot: MapSnapshot): void {
   const layer = snapshot.layers.find(l => l.id === entity.layerId);
-  if (!layer || layer.type !== 'vector') throw new MapError('MISSING_LAYER', `Entity ${entity.id}: vector layer not found`);
-  if (entity.styleId && !snapshot.styles?.[entity.styleId]) throw new MapError('MISSING_STYLE', `Entity ${entity.id}: style not found`);
+  if (!layer || layer.type !== 'vector') throw new MapError('MISSING_LAYER', locale.missingEntityLayer(entity.id));
+  if (entity.styleId && !snapshot.styles?.[entity.styleId]) throw new MapError('MISSING_STYLE', locale.missingEntityStyle(entity.id));
   if (snapshot.coordinateSystem.kind === 'geographic') {
     for (const p of positions(entity)) validateGeographicPosition(p);
     const g = entity.geometry;
     const rings = g.type === 'Point' ? [] : g.type === 'Polygon' ? g.coordinates : g.coordinates.flat();
-    if (rings.some(r => r.some((p, i) => i > 0 && Math.abs(p[0] - r[i - 1][0]) > 180))) throw new MapError('ANTIMERIDIAN', `Entity ${entity.id}: antimeridian crossings are unsupported`);
+    if (rings.some(r => r.some((p, i) => i > 0 && Math.abs(p[0] - r[i - 1][0]) > 180))) throw new MapError('ANTIMERIDIAN', locale.unsupportedAntimeridian(entity.id));
   }
 }
 export function validateEntities(input: readonly Entity[], snapshot: MapSnapshot): Entity[] {
@@ -99,11 +100,11 @@ export function validateEntities(input: readonly Entity[], snapshot: MapSnapshot
   const output: Entity[] = []; const ids = new Set<string>();
   for (const value of input) {
     const entity = entitySchema.parse(value) as Entity;
-    if (ids.has(entity.id)) throw new MapError('DUPLICATE_ID', `Duplicate ID in update: ${entity.id}`);
+    if (ids.has(entity.id)) throw new MapError('DUPLICATE_ID', locale.duplicateUpdateId(entity.id));
     ids.add(entity.id); validateEntityContext(entity, snapshot); output.push(entity);
   }
   return output;
 }
 function assertSerializable(input: unknown): void {
-  try { JSON.stringify(input); } catch { throw new MapError('INVALID_JSON', 'Map data must be JSON-serializable and cannot contain cycles'); }
+  try { JSON.stringify(input); } catch { throw new MapError('INVALID_JSON', locale.invalidJson); }
 }

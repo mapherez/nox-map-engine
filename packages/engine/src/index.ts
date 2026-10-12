@@ -1,3 +1,4 @@
+import { en as locale } from './locales/en.js';
 import {
   cameraSchema, entityBounds, MapError, parseViewState, serializeViewState, validateEntities,
   validateGeographicPosition, validateSnapshot,
@@ -29,7 +30,7 @@ export class MapEngine {
   private suppressView = false;
   private renderer: RendererPort;
   constructor(private options: EngineOptions) {
-    if (options.maxPixelRatio !== undefined && (!Number.isFinite(options.maxPixelRatio) || options.maxPixelRatio <= 0)) throw new MapError('INVALID_PIXEL_RATIO', 'maxPixelRatio must be finite and positive');
+    if (options.maxPixelRatio !== undefined && (!Number.isFinite(options.maxPixelRatio) || options.maxPixelRatio <= 0)) throw new MapError('INVALID_PIXEL_RATIO', locale.invalidPixelRatio);
     this.renderer = options.renderer ?? new OpenLayersRenderer({ gestures: options.gestures, profile: options.profile, maxPixelRatio: options.maxPixelRatio, style: options.style });
     this.renderer.mount(options.container, {
       view: (camera, settled) => { if (!this.suppressView && this.snapshot) this.emit('viewchange', { camera, cause: 'interaction', settled }); },
@@ -42,8 +43,8 @@ export class MapEngine {
       error: error => this.emit('error', { error, recoverable: true })
     });
   }
-  private assertAlive(): void { if (this.dead) throw new MapError('DESTROYED', 'Engine has been destroyed'); }
-  private active(): MapSnapshot { this.assertAlive(); if (!this.snapshot) throw new MapError('NO_MAP', 'Load a map first'); return this.snapshot; }
+  private assertAlive(): void { if (this.dead) throw new MapError('DESTROYED', locale.destroyed); }
+  private active(): MapSnapshot { this.assertAlive(); if (!this.snapshot) throw new MapError('NO_MAP', locale.noMap); return this.snapshot; }
   on<K extends keyof EngineEvents>(type: K, listener: Listener<K>): () => void {
     this.assertAlive(); let set = this.listeners.get(type);
     if (!set) { set = new Set(); this.listeners.set(type, set); }
@@ -62,15 +63,15 @@ export class MapEngine {
       const parsedRestored = options.viewState ? parseViewState(encodeURIComponent(JSON.stringify(options.viewState))) : undefined;
       for (const message of parsedRestored?.diagnostics ?? []) this.emit('warning', { code: 'INVALID_LINK_FIELD', message });
       const restored = parsedRestored?.state;
-      if (restored && restored.mapId !== mapId) throw new MapError('IDENTITY_MISMATCH', 'View state belongs to another map');
+      if (restored && restored.mapId !== mapId) throw new MapError('IDENTITY_MISMATCH', locale.viewIdentityMismatch);
       const requestedSnapshot = restored?.snapshotId ?? options.snapshotId;
       const snapshot = validateSnapshot(await this.options.dataSource.getSnapshot({ mapId, snapshotId: requestedSnapshot }, { signal: controller.signal }));
       controller.signal.throwIfAborted();
       if (generation !== this.generation || this.dead) throw new DOMException('Superseded map load', 'AbortError');
-      if (snapshot.mapId !== mapId || (requestedSnapshot && snapshot.snapshotId !== requestedSnapshot)) throw new MapError('IDENTITY_MISMATCH', 'Data source returned the wrong snapshot');
+      if (snapshot.mapId !== mapId || (requestedSnapshot && snapshot.snapshotId !== requestedSnapshot)) throw new MapError('IDENTITY_MISMATCH', locale.snapshotIdentityMismatch);
       if (restored?.camera && snapshot.coordinateSystem.kind === 'geographic') {
         try { validateGeographicPosition(restored.camera.center); }
-        catch { restored.camera = undefined; this.emit('warning', { code: 'INVALID_LINK_FIELD', message: 'Ignored camera outside the Web Mercator domain' }); }
+        catch { restored.camera = undefined; this.emit('warning', { code: 'INVALID_LINK_FIELD', message: locale.unsupportedCameraIgnored }); }
       }
       const camera = restored?.camera ?? options.initialView ?? snapshot.initialView;
       if (camera) { cameraSchema.parse(camera); if (snapshot.coordinateSystem.kind === 'geographic') validateGeographicPosition(camera.center); }
@@ -86,7 +87,7 @@ export class MapEngine {
         if (this.entities.has(restored.selectedEntityId)) {
           this.selectEntity(restored.selectedEntityId, 'restore');
           if (!restored.camera) this.focusEntity(restored.selectedEntityId, 'restore');
-        } else this.emit('warning', { code: 'ENTITY_NOT_FOUND', message: `Entity ${restored.selectedEntityId} no longer exists` });
+        } else this.emit('warning', { code: 'ENTITY_NOT_FOUND', message: locale.entityNoLongerExists(restored.selectedEntityId) });
       }
       this.suppressView = false;
       this.emit('mapchange', { mapId: snapshot.mapId, snapshotId: snapshot.snapshotId });
@@ -117,14 +118,14 @@ export class MapEngine {
   }
   fitBounds(bounds?: Bounds, padding = 32, cause: ViewCause = 'api'): void {
     const map = this.active(); const b = bounds ?? map.bounds;
-    if (b.some(n => !Number.isFinite(n)) || b[0] > b[2] || b[1] > b[3] || !Number.isFinite(padding) || padding < 0) throw new MapError('INVALID_BOUNDS', 'Invalid fit bounds or padding');
+    if (b.some(n => !Number.isFinite(n)) || b[0] > b[2] || b[1] > b[3] || !Number.isFinite(padding) || padding < 0) throw new MapError('INVALID_BOUNDS', locale.invalidFitBoundsOrPadding);
     if (map.coordinateSystem.kind === 'geographic') { validateGeographicPosition([b[0], b[1]]); validateGeographicPosition([b[2], b[3]]); }
     this.suppressView = true; let camera: Camera;
     try { camera = this.renderer.fitBounds(b, padding); } finally { this.suppressView = false; }
     this.emit('viewchange', { camera, cause, settled: true });
   }
   focusEntity(id: string, cause: ViewCause = 'api'): void {
-    this.active(); const entity = this.entities.get(id); if (!entity) throw new MapError('NOT_FOUND', 'Entity not found');
+    this.active(); const entity = this.entities.get(id); if (!entity) throw new MapError('NOT_FOUND', locale.entityNotFound);
     this.setLayerVisibility(entity.layerId, true);
     if (entity.geometry.type === 'Point') this.setView({ ...this.renderer.getView(), center: entity.geometry.coordinates }, cause);
     else this.fitBounds(entityBounds(entity), 48, cause);
@@ -133,20 +134,20 @@ export class MapEngine {
   screenToMap(pixel: Position): Position | undefined { this.active(); return this.renderer.screenToMap(pixel); }
   pick(pixel: Position): Hit[] { this.active(); return structuredClone(this.renderer.pick(pixel)); }
   setLayerVisibility(id: string, visible: boolean): void {
-    this.active(); const state = this.layers.get(id); if (!state) throw new MapError('NOT_FOUND', 'Layer not found');
-    if (typeof visible !== 'boolean') throw new MapError('INVALID_LAYER', 'Visibility must be boolean');
+    this.active(); const state = this.layers.get(id); if (!state) throw new MapError('NOT_FOUND', locale.layerNotFound);
+    if (typeof visible !== 'boolean') throw new MapError('INVALID_LAYER', locale.invalidVisibility);
     if (state.visible === visible) return;
     state.visible = visible; this.renderer.setLayer(state);
     if (!visible && this.selected && this.entities.get(this.selected)?.layerId === id) this.clearSelection();
     this.emit('layerchange', { ...state });
   }
   setLayerOpacity(id: string, opacity: number): void {
-    this.active(); const state = this.layers.get(id); if (!state) throw new MapError('NOT_FOUND', 'Layer not found');
-    if (!Number.isFinite(opacity) || opacity < 0 || opacity > 1) throw new MapError('INVALID_OPACITY', 'Opacity must be in [0,1]');
+    this.active(); const state = this.layers.get(id); if (!state) throw new MapError('NOT_FOUND', locale.layerNotFound);
+    if (!Number.isFinite(opacity) || opacity < 0 || opacity > 1) throw new MapError('INVALID_OPACITY', locale.invalidOpacity);
     state.opacity = opacity; this.renderer.setLayer(state); this.emit('layerchange', { ...state });
   }
   selectEntity(id: string, cause: ViewCause = 'api'): void {
-    this.active(); const e = this.entities.get(id); if (!e) throw new MapError('NOT_FOUND', 'Entity not found');
+    this.active(); const e = this.entities.get(id); if (!e) throw new MapError('NOT_FOUND', locale.entityNotFound);
     this.setLayerVisibility(e.layerId, true);
     if (this.selected === id) return;
     this.selected = id; this.renderer.select(e); this.emit('selectionchange', { entity: structuredClone(e), cause });
@@ -173,7 +174,7 @@ export class MapEngine {
   }
   activateContent(entityId: string, index: number): void {
     this.active(); const entity = this.entities.get(entityId), content: ContentRef | undefined = entity?.contentRefs?.[index];
-    if (!entity || !content) throw new MapError('NOT_FOUND', 'Content reference not found');
+    if (!entity || !content) throw new MapError('NOT_FOUND', locale.contentReferenceNotFound);
     this.emit('contentactivate', { entity: structuredClone(entity), content: structuredClone(content) });
   }
   serializeViewState(): string {

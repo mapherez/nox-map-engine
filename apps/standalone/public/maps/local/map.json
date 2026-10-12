@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "mapId": "local",
   "snapshotId": "base",
-  "title": "Costa de Esmeralda",
+  "title": "Emerald Coast",
   "coordinateSystem": {
     "kind": "local",
     "units": "unit"
@@ -34,7 +34,7 @@
       "asset": {
         "uri": "./base.svg"
       },
-      "attribution": "Mapa demonstrativo · NoX Atlas"
+      "attribution": "Demo map · NoX Atlas"
     }
   ],
   "layers": [
@@ -42,14 +42,14 @@
       "id": "base",
       "type": "raster",
       "sourceId": "illustration",
-      "title": "Mapa base",
+      "title": "Base map",
       "order": 0,
       "visible": true,
       "opacity": 1
     },
     {
       "id": "regions",
-      "title": "Regiões",
+      "title": "Regions",
       "type": "vector",
       "order": 1,
       "visible": true,
@@ -63,7 +63,7 @@
     },
     {
       "id": "points",
-      "title": "Pontos de interesse",
+      "title": "Points of interest",
       "type": "vector",
       "order": 2,
       "visible": true,
@@ -87,17 +87,17 @@
           400
         ]
       },
-      "label": "Observatório",
+      "label": "Observatory",
       "metadata": {
-        "Categoria": "Ponto de interesse",
+        "Category": "Point of interest",
         "Altitude": "148 m"
       },
-      "description": "Um ponto elevado sobre a costa. Selecciona entidades para consultar informação e referências externas.",
+      "description": "A high point overlooking the coast. Select entities to view information and external references.",
       "contentRefs": [
         {
           "type": "url",
           "ref": "https://github.com/mapherez/nox-map-engine",
-          "title": "Ver projecto"
+          "title": "View project"
         }
       ]
     },
@@ -153,12 +153,12 @@
           ]
         ]
       },
-      "label": "Reserva do Vale",
-      "description": "Região interactiva com um buraco central: a área interior fica fora da selecção."
+      "label": "Valley Reserve",
+      "description": "An interactive region with a central hole: the inner area is excluded from selection."
     },
     {
       "id": "harbor",
-      "label": "Porto de Maré",
+      "label": "Tidal Harbor",
       "layerId": "points",
       "geometry": {
         "type": "Point",
@@ -168,13 +168,13 @@
         ]
       },
       "metadata": {
-        "Categoria": "Porto"
+        "Category": "Harbor"
       },
-      "description": "O encontro entre a vila e o mar."
+      "description": "Where the town meets the sea."
     },
     {
       "id": "garden",
-      "label": "Jardim das Fontes",
+      "label": "Fountain Garden",
       "layerId": "points",
       "geometry": {
         "type": "Point",
@@ -187,12 +187,12 @@
         "fill": "#ffc978"
       },
       "metadata": {
-        "Categoria": "Jardim"
+        "Category": "Garden"
       }
     },
     {
       "id": "lighthouse",
-      "label": "Farol do Sul",
+      "label": "South Lighthouse",
       "layerId": "points",
       "geometry": {
         "type": "Point",
@@ -201,11 +201,11 @@
           660
         ]
       },
-      "description": "Um ponto de referência na costa sul."
+      "description": "A landmark on the southern coast."
     },
     {
       "id": "gate",
-      "label": "Porta da Serra",
+      "label": "Mountain Gate",
       "layerId": "points",
       "geometry": {
         "type": "Point",
@@ -215,12 +215,12 @@
         ]
       },
       "metadata": {
-        "Categoria": "Miradouro"
+        "Category": "Viewpoint"
       }
     },
     {
       "id": "town",
-      "label": "Vila Antiga",
+      "label": "Old Town",
       "layerId": "regions",
       "geometry": {
         "type": "MultiPolygon",
@@ -281,7 +281,7 @@
         "labelMinZoom": 1
       },
       "metadata": {
-        "Categoria": "Região"
+        "Category": "Region"
       }
     }
   ]

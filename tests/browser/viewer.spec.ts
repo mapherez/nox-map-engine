@@ -2,17 +2,17 @@ import { test, expect } from '@playwright/test';
 import type { MapEngine } from '@nox-map/engine';
 declare global { interface Window { noxEngine: MapEngine } }
 test.beforeEach(async ({ page }) => {
-  await page.goto('/'); await expect(page.locator('#map-title')).toHaveText('Costa de Esmeralda');
+  await page.goto('/'); await expect(page.locator('#map-title')).toHaveText('Emerald Coast');
   await page.waitForFunction(() => window.noxEngine?.getState().loading === false);
 });
 test('loads raster, navigates, picks points and exposes metadata without page errors', async ({ page }, info) => {
   const errors: string[] = []; page.on('pageerror', e => errors.push(e.message));
   await expect(page.locator('#map canvas').first()).toBeVisible();
-  await page.getByRole('button', { name: 'Observatório', exact: false }).click();
-  await expect(page.locator('#details h2')).toHaveText('Observatório'); await expect(page.locator('#details')).toContainText('148 m');
-  await page.getByRole('button', { name: 'Fechar detalhes' }).click();
+  await page.getByRole('button', { name: 'Observatory', exact: false }).click();
+  await expect(page.locator('#details h2')).toHaveText('Observatory'); await expect(page.locator('#details')).toContainText('148 m');
+  await page.getByRole('button', { name: 'Close details' }).click();
   const zoom = await page.evaluate(() => window.noxEngine.getState().camera!.zoom);
-  await page.getByRole('button', { name: 'Aproximar', exact: true }).click();
+  await page.getByRole('button', { name: 'Zoom in', exact: true }).click();
   await expect.poll(() => page.evaluate(() => window.noxEngine.getState().camera!.zoom)).toBeCloseTo(zoom + 1);
   const selected = await page.evaluate(() => {
     const e = window.noxEngine; e.setView({ center: [500, 400], zoom: 1 });
@@ -44,11 +44,11 @@ test('round-trips coordinates, resizes and handles incremental mutations', async
   await page.evaluate(() => window.noxEngine.removeEntities(['new'])); await expect(page.locator('#details-panel')).toBeHidden();
 });
 test('restores deep links and selection with browser history', async ({ page }) => {
-  await page.getByRole('button', { name: 'Observatório', exact: false }).click();
-  const url = page.url(); await page.reload(); await expect(page.locator('#details h2')).toHaveText('Observatório');
+  await page.getByRole('button', { name: 'Observatory', exact: false }).click();
+  const url = page.url(); await page.reload(); await expect(page.locator('#details h2')).toHaveText('Observatory');
   expect(page.url()).toBe(url);
-  await page.getByRole('button', { name: 'Farol do Sul', exact: false }).click(); await expect(page.locator('#details h2')).toHaveText('Farol do Sul');
-  await page.goBack(); await expect(page.locator('#details h2')).toHaveText('Observatório');
+  await page.getByRole('button', { name: 'South Lighthouse', exact: false }).click(); await expect(page.locator('#details h2')).toHaveText('South Lighthouse');
+  await page.goBack(); await expect(page.locator('#details h2')).toHaveText('Observatory');
 });
 test('wheel and focused keyboard pan/zoom, drag does not select', async ({ page }, info) => {
   if (info.project.name === 'mobile-chromium') test.skip(true, 'Physical touch gesture validation is separate; mobile API/UI flows run in other tests');
@@ -63,7 +63,7 @@ test('wheel and focused keyboard pan/zoom, drag does not select', async ({ page 
 });
 test('switches to geographic XYZ with a mock tile service', async ({ page }) => {
   await page.route('https://tile.openstreetmap.org/**', route => route.fulfill({ status: 200, contentType: 'image/png', path: 'apps/standalone/public/maps/local/thumbnail.png' }));
-  await page.selectOption('#map-select', 'lisbon'); await expect(page.locator('#map-title')).toHaveText('Lisboa');
+  await page.selectOption('#map-select', 'lisbon'); await expect(page.locator('#map-title')).toHaveText('Lisbon');
   const point = await page.evaluate(() => {
     const e = window.noxEngine; e.focusEntity('castle'); return e.screenToMap(e.mapToScreen([-9.1335, 38.7139])!)!;
   }); expect(point[0]).toBeCloseTo(-9.1335, 6); expect(point[1]).toBeCloseTo(38.7139, 6);
@@ -104,8 +104,8 @@ test('mobile touch tap, drag and pinch reach native map interactions', async ({ 
   await expect.poll(() => page.evaluate(() => window.noxEngine.getState().camera!.zoom)).toBeGreaterThan(before);
   await page.evaluate(() => window.noxEngine.focusEntity('point'));
   const pixel = await page.evaluate(() => window.noxEngine.mapToScreen([500, 400])!);
-  await page.touchscreen.tap(box.x + pixel[0], box.y + pixel[1]); await expect(page.locator('#details h2')).toHaveText('Observatório');
-  await page.getByRole('button', { name: 'Fechar detalhes' }).click();
+  await page.touchscreen.tap(box.x + pixel[0], box.y + pixel[1]); await expect(page.locator('#details h2')).toHaveText('Observatory');
+  await page.getByRole('button', { name: 'Close details' }).click();
   await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: cx, y: cy, id: 0 }] });
   await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: cx + 60, y: cy + 50, id: 0 }] });
   await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });

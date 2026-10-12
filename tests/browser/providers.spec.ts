@@ -3,7 +3,7 @@ import type { MapEngine } from '@nox-map/engine';
 declare global { interface Window { noxEngine: MapEngine } }
 test('protected raster and icon assets use the authenticated provider', async ({ page }) => {
   const requests: string[] = [];
-  await page.goto('/'); await expect(page.locator('#map-title')).toHaveText('Costa de Esmeralda');
+  await page.goto('/'); await expect(page.locator('#map-title')).toHaveText('Emerald Coast');
   const snapshot = await page.evaluate(() => ({ ...window.noxEngine.getMap(), entities: window.noxEngine.getEntities() }));
   snapshot.mapId = 'protected';
   const image = snapshot.sources[0]; if (image.type !== 'image') throw new Error('Expected image fixture'); image.asset = { uri: './image.svg' };
