@@ -1,0 +1,79 @@
+name: Release
+on:
+  push:
+    tags: ["v*"]
+permissions:
+  contents: read
+concurrency:
+  group: nox-map-engine-release
+  cancel-in-progress: false
+jobs:
+  approval:
+    name: Reuse approved source CI
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      source_sha: ${{ steps.ci.outputs.source_sha }}
+      ci_run_id: ${{ steps.ci.outputs.ci_run_id }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "26"
+          package-manager-cache: false
+      - name: Require successful CI for the exact source
+        id: ci
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const { pathToFileURL } = require('node:url');
+            const { requireApprovedCI } = await import(pathToFileURL(`${process.env.GITHUB_WORKSPACE}/scripts/ci-policy.mjs`).href);
+            const tag = context.ref.startsWith('refs/tags/') ? context.ref.slice('refs/tags/'.length) : '';
+            if (!tag) throw new Error("Release requires a version tag.");
+            const approval = await requireApprovedCI({ github, ...context.repo, revision: context.sha, tag });
+            core.setOutput('source_sha', approval.sourceSha);
+            core.setOutput('ci_run_id', String(approval.runId));
+            core.notice(`Reusing source CI ${approval.runId} (${approval.sourceSha}); no source checks are repeated.`);
+
+  publish:
+    needs: approval
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - name: Refuse an existing release
+        uses: actions/github-script@v8
+        with:
+          script: |
+            try {
+              await github.rest.repos.getReleaseByTag({ ...context.repo, tag: context.ref.slice('refs/tags/'.length) });
+              throw new Error('This release already exists.');
+            } catch (error) { if (error.status !== 404) throw error; }
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "26"
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Pack the six versioned libraries and standalone application
+        run: |
+          mkdir -p release
+          for package in packages/*; do
+            npm pack --ignore-scripts --workspace "$package" --pack-destination release
+          done
+          tar -czf release/nox-map-standalone.tar.gz -C apps/standalone/dist .
+      - name: Publish complete archives as a GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          prerelease=()
+          if [[ "$RELEASE_TAG" == *-* ]]; then prerelease+=(--prerelease --latest=false); fi
+          gh release create "$RELEASE_TAG" release/* --verify-tag --title "$RELEASE_TAG" --generate-notes "${prerelease[@]}"

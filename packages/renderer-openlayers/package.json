@@ -1,5 +1,18 @@
 {
-  "name": "@nox-map/renderer-openlayers", "version": "0.1.0", "type": "module",
-  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
-  "files": ["dist"], "dependencies": { "@nox-map/core": "0.1.0", "ol": "^10.7.0" }
+  "name": "@nox-map/renderer-openlayers",
+  "version": "0.1.0",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "@nox-map/core": "0.1.0",
+    "ol": "^10.7.0"
+  }
 }

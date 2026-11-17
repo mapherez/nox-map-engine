@@ -1,0 +1,63 @@
+{
+  "workflow": "ci.yml",
+  "marker": "nox-map-engine-Release:",
+  "branch": "master",
+  "files": [
+    {
+      "path": "package.json",
+      "fields": [["version"]]
+    },
+    {
+      "path": "packages/cli/package.json",
+      "fields": [["version"], ["dependencies", "@nox-map/core"]]
+    },
+    {
+      "path": "packages/controls/package.json",
+      "fields": [
+        ["version"],
+        ["dependencies", "@nox-map/core"],
+        ["dependencies", "@nox-map/engine"]
+      ]
+    },
+    {
+      "path": "packages/core/package.json",
+      "fields": [["version"]]
+    },
+    {
+      "path": "packages/data-source-static/package.json",
+      "fields": [["version"], ["dependencies", "@nox-map/core"]]
+    },
+    {
+      "path": "packages/engine/package.json",
+      "fields": [
+        ["version"],
+        ["dependencies", "@nox-map/core"],
+        ["dependencies", "@nox-map/renderer-openlayers"]
+      ]
+    },
+    {
+      "path": "packages/renderer-openlayers/package.json",
+      "fields": [["version"], ["dependencies", "@nox-map/core"]]
+    },
+    {
+      "path": "package-lock.json",
+      "fields": [
+        ["version"],
+        ["packages", "", "version"],
+        ["packages", "packages/cli", "version"],
+        ["packages", "packages/controls", "version"],
+        ["packages", "packages/core", "version"],
+        ["packages", "packages/data-source-static", "version"],
+        ["packages", "packages/engine", "version"],
+        ["packages", "packages/renderer-openlayers", "version"],
+        ["packages", "packages/cli", "dependencies", "@nox-map/core"],
+        ["packages", "packages/controls", "dependencies", "@nox-map/core"],
+        ["packages", "packages/controls", "dependencies", "@nox-map/engine"],
+        ["packages", "packages/data-source-static", "dependencies", "@nox-map/core"],
+        ["packages", "packages/engine", "dependencies", "@nox-map/core"],
+        ["packages", "packages/engine", "dependencies", "@nox-map/renderer-openlayers"],
+        ["packages", "packages/renderer-openlayers", "dependencies", "@nox-map/core"]
+      ]
+    }
+  ]
+}

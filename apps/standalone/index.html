@@ -1,37 +1,87 @@
 <!doctype html>
 <html lang="%locale.language%">
-<head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#10201b"><title>%locale.pageTitle%</title>
-</head>
-<body>
-  <a class="skip-link" href="#map">%locale.skipToMap%</a>
-  <header class="app-header">
-    <a class="brand" href="./" aria-label="%locale.home%"><span class="brand-mark" aria-hidden="true">%locale.brandMark%</span><span>%locale.brandName% <strong>%locale.brandAtlas%</strong></span></a>
-    <span class="header-rule" aria-hidden="true"></span><span class="header-caption">%locale.headerCaption%</span>
-    <button id="share" type="button" class="share-button">%locale.shareLocation% <span aria-hidden="true">↗</span></button>
-  </header>
-  <main class="workspace">
-    <aside class="sidebar" aria-label="%locale.exploreMaps%">
-      <div class="sidebar-top"><span class="eyebrow">%locale.explore%</span><h1>%locale.yourMaps%</h1><p>%locale.findPoint%<br>%locale.discoverSurroundings%</p></div>
-      <div class="map-picker"><label for="map-select">%locale.activeMap%</label><select id="map-select" disabled><option>%locale.loading%</option></select></div>
-      <section class="layer-section"><h2>%locale.layers% <span id="layer-count" class="count"></span></h2><div id="layers"></div></section>
-      <section class="entity-section"><h2>%locale.entities% <span id="entity-count" class="count"></span></h2>
-        <label class="visually-hidden" for="search">%locale.searchEntities%</label><input id="search" type="search" placeholder="%locale.searchPlaceholder%" autocomplete="off">
-        <ul id="entities" class="entity-list"></ul>
-        <div class="pagination"><button id="previous" type="button" aria-label="%locale.previousPage%">←</button><span id="page-count"></span><button id="next" type="button" aria-label="%locale.nextPage%">→</button></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#10201b" />
+    <title>%locale.pageTitle%</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#map">%locale.skipToMap%</a>
+    <header class="app-header">
+      <a class="brand" href="./" aria-label="%locale.home%"
+        ><span class="brand-mark" aria-hidden="true">%locale.brandMark%</span
+        ><span>%locale.brandName% <strong>%locale.brandAtlas%</strong></span></a
+      >
+      <span class="header-rule" aria-hidden="true"></span
+      ><span class="header-caption">%locale.headerCaption%</span>
+      <button id="share" type="button" class="share-button">
+        %locale.shareLocation% <span aria-hidden="true">↗</span>
+      </button>
+    </header>
+    <main class="workspace">
+      <aside class="sidebar" aria-label="%locale.exploreMaps%">
+        <div class="sidebar-top">
+          <span class="eyebrow">%locale.explore%</span>
+          <h1>%locale.yourMaps%</h1>
+          <p>%locale.findPoint%<br />%locale.discoverSurroundings%</p>
+        </div>
+        <div class="map-picker">
+          <label for="map-select">%locale.activeMap%</label
+          ><select id="map-select" disabled>
+            <option>%locale.loading%</option>
+          </select>
+        </div>
+        <section class="layer-section">
+          <h2>%locale.layers% <span id="layer-count" class="count"></span></h2>
+          <div id="layers"></div>
+        </section>
+        <section class="entity-section">
+          <h2>%locale.entities% <span id="entity-count" class="count"></span></h2>
+          <label class="visually-hidden" for="search">%locale.searchEntities%</label
+          ><input
+            id="search"
+            type="search"
+            placeholder="%locale.searchPlaceholder%"
+            autocomplete="off"
+          />
+          <ul id="entities" class="entity-list"></ul>
+          <div class="pagination">
+            <button id="previous" type="button" aria-label="%locale.previousPage%">←</button
+            ><span id="page-count"></span
+            ><button id="next" type="button" aria-label="%locale.nextPage%">→</button>
+          </div>
+        </section>
+        <footer class="sidebar-footer">
+          <span class="status-dot" aria-hidden="true"></span
+          ><span id="catalog-status">%locale.mapCatalog%</span>
+        </footer>
+      </aside>
+      <section class="map-stage" aria-label="%locale.mapView%">
+        <div id="map" aria-describedby="map-help"></div>
+        <div class="map-title">
+          <span class="eyebrow">%locale.yourView%</span>
+          <h2 id="map-title">%locale.openingMap%</h2>
+          <span id="map-subtitle"></span>
+        </div>
+        <div id="map-help" class="map-help">
+          %locale.dragHelp% <span aria-hidden="true">·</span> %locale.zoomHelp%
+        </div>
+        <div class="map-bottom"><span id="coordinates">—</span><span id="attribution"></span></div>
+        <aside id="details-panel" class="details-panel" aria-label="%locale.entityDetails%" hidden>
+          <button
+            id="close-details"
+            type="button"
+            class="close-button"
+            aria-label="%locale.closeDetails%"
+          >
+            ×
+          </button>
+          <div id="details"></div>
+        </aside>
+        <div id="message" class="message" role="status" hidden></div>
       </section>
-      <footer class="sidebar-footer"><span class="status-dot" aria-hidden="true"></span><span id="catalog-status">%locale.mapCatalog%</span></footer>
-    </aside>
-    <section class="map-stage" aria-label="%locale.mapView%">
-      <div id="map" aria-describedby="map-help"></div>
-      <div class="map-title"><span class="eyebrow">%locale.yourView%</span><h2 id="map-title">%locale.openingMap%</h2><span id="map-subtitle"></span></div>
-      <div id="map-help" class="map-help">%locale.dragHelp% <span aria-hidden="true">·</span> %locale.zoomHelp%</div>
-      <div class="map-bottom"><span id="coordinates">—</span><span id="attribution"></span></div>
-      <aside id="details-panel" class="details-panel" aria-label="%locale.entityDetails%" hidden><button id="close-details" type="button" class="close-button" aria-label="%locale.closeDetails%">×</button><div id="details"></div></aside>
-      <div id="message" class="message" role="status" hidden></div>
-    </section>
-  </main>
-  <script type="module" src="./src/main.ts"></script>
-</body>
+    </main>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
 </html>

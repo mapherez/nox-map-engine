@@ -2,23 +2,34 @@
   "name": "nox-map-engine-workspace",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "workspaces": [
     "packages/*",
     "apps/*"
   ],
+  "type": "module",
   "scripts": {
-    "dev:examples": "vite --config examples/vite.config.ts --host 127.0.0.1",
-    "dev": "vite --config apps/standalone/vite.config.ts --host 127.0.0.1",
+    "dev:examples": "vp dev --config examples/vite.config.ts --host 127.0.0.1",
+    "dev": "vp dev --config apps/standalone/vite.config.ts --host 127.0.0.1",
     "build": "node scripts/build.mjs",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
+    "test": "vp test run",
     "test:e2e": "playwright test",
     "test:production": "playwright test --config tests/production/playwright.config.ts",
     "verify:packages": "node scripts/verify-packages.mjs",
     "benchmark": "playwright test --config benchmarks/playwright.config.ts",
-    "prepare-map": "tsx packages/cli/src/bin.ts",
-    "fixtures": "tsx scripts/fixtures.ts"
+    "prepare-map": "vpx packages/cli/src/bin.ts",
+    "fixtures": "vpx scripts/fixtures.ts",
+    "release": "node scripts/release.mjs",
+    "test:ci-policy": "node --test scripts/ci-policy.test.mjs",
+    "hooks:install": "node scripts/install-hooks.mjs",
+    "prepare": "node --input-type=module -e \"import { existsSync } from 'node:fs'; if (existsSync('scripts/install-hooks.mjs')) await import('./scripts/install-hooks.mjs');\"",
+    "precommit": "node scripts/git-hooks.mjs commit",
+    "check": "node scripts/git-hooks.mjs check",
+    "prepush": "npm run check",
+    "test:release": "node --test scripts/release.test.mjs scripts/ci-policy.test.mjs",
+    "check:code": "vp check",
+    "format:check": "vp fmt --check",
+    "format": "vp fmt"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",
@@ -28,9 +39,11 @@
     "@types/react-dom": "19.3.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
-    "tsx": "4.23.15",
     "typescript": "7.0.2",
-    "vite": "8.3.2",
-    "vitest": "5.0.3"
+    "vite": "npm:@voidzero-dev/vite-plus-core@1.6.0",
+    "vite-plus": "1.6.0"
+  },
+  "overrides": {
+    "vite": "npm:@voidzero-dev/vite-plus-core@1.6.0"
   }
 }

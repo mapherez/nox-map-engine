@@ -1,54 +1,150 @@
 export type Position = [number, number];
 export type Bounds = [number, number, number, number];
-export type CoordinateSystem = { kind: 'local'; units: string } | { kind: 'geographic'; crs: 'EPSG:4326' };
-export type Geometry = { type: 'Point'; coordinates: Position } | { type: 'Polygon'; coordinates: Position[][] } | { type: 'MultiPolygon'; coordinates: Position[][][] };
+export type CoordinateSystem =
+  | { kind: "local"; units: string }
+  | { kind: "geographic"; crs: "EPSG:4326" };
+export type Geometry =
+  | { type: "Point"; coordinates: Position }
+  | { type: "Polygon"; coordinates: Position[][] }
+  | { type: "MultiPolygon"; coordinates: Position[][][] };
 export type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
-export interface AssetRef { uri: string }
-export interface ContentRef { type: string; ref: string; title?: string }
-export interface Camera { center: Position; zoom: number }
+export interface AssetRef {
+  uri: string;
+}
+export interface ContentRef {
+  type: string;
+  ref: string;
+  title?: string;
+}
+export interface Camera {
+  center: Position;
+  zoom: number;
+}
 export interface Paint {
-  fill?: string; stroke?: string; strokeWidth?: number; radius?: number;
-  icon?: AssetRef; size?: Position; anchor?: Position; textColor?: string;
-  font?: string; labelMinZoom?: number; labelMaxZoom?: number; priority?: number;
+  fill?: string;
+  stroke?: string;
+  strokeWidth?: number;
+  radius?: number;
+  icon?: AssetRef;
+  size?: Position;
+  anchor?: Position;
+  textColor?: string;
+  font?: string;
+  labelMinZoom?: number;
+  labelMaxZoom?: number;
+  priority?: number;
 }
-export interface EntityStyle extends Paint { hover?: Paint; selected?: Paint }
+export interface EntityStyle extends Paint {
+  hover?: Paint;
+  selected?: Paint;
+}
 export interface Entity {
-  id: string; layerId: string; geometry: Geometry; label?: string; description?: string;
-  styleId?: string; style?: EntityStyle; metadata?: Record<string, Json>; contentRefs?: ContentRef[];
+  id: string;
+  layerId: string;
+  geometry: Geometry;
+  label?: string;
+  description?: string;
+  styleId?: string;
+  style?: EntityStyle;
+  metadata?: Record<string, Json>;
+  contentRefs?: ContentRef[];
 }
-interface RasterPlacement { origin: Position; width: number; height: number; unitsPerPixel: number }
-interface SourceCommon { id: string; attribution?: string }
+interface RasterPlacement {
+  origin: Position;
+  width: number;
+  height: number;
+  unitsPerPixel: number;
+}
+interface SourceCommon {
+  id: string;
+  attribution?: string;
+}
 export type RasterSource =
-  | (SourceCommon & RasterPlacement & { type: 'image'; asset: AssetRef })
-  | (SourceCommon & RasterPlacement & { type: 'raster-pyramid'; template: string; tileSize: number; maxLevel: number })
-  | (SourceCommon & { type: 'xyz'; template: string; tileSize: number; minLevel: number; maxLevel: number });
+  | (SourceCommon & RasterPlacement & { type: "image"; asset: AssetRef })
+  | (SourceCommon &
+      RasterPlacement & {
+        type: "raster-pyramid";
+        template: string;
+        tileSize: number;
+        maxLevel: number;
+      })
+  | (SourceCommon & {
+      type: "xyz";
+      template: string;
+      tileSize: number;
+      minLevel: number;
+      maxLevel: number;
+    });
 export type MapLayer = {
-  id: string; title: string; order: number; visible: boolean; opacity: number;
-  style?: EntityStyle; minZoom?: number; maxZoom?: number;
-} & ({ type: 'raster'; sourceId: string } | { type: 'vector'; cluster?: false | { distance: number } });
-export interface MapSummary { mapId: string; title: string; thumbnail?: AssetRef }
+  id: string;
+  title: string;
+  order: number;
+  visible: boolean;
+  opacity: number;
+  style?: EntityStyle;
+  minZoom?: number;
+  maxZoom?: number;
+} & (
+  | { type: "raster"; sourceId: string }
+  | { type: "vector"; cluster?: false | { distance: number } }
+);
+export interface MapSummary {
+  mapId: string;
+  title: string;
+  thumbnail?: AssetRef;
+}
 export interface MapSnapshot {
-  schemaVersion: 1; mapId: string; snapshotId: string; title: string;
-  coordinateSystem: CoordinateSystem; bounds: Bounds; initialView?: Camera;
-  minZoom?: number; maxZoom?: number; sources: RasterSource[]; layers: MapLayer[];
-  styles?: Record<string, EntityStyle>; entities: Entity[];
+  schemaVersion: 1;
+  mapId: string;
+  snapshotId: string;
+  title: string;
+  coordinateSystem: CoordinateSystem;
+  bounds: Bounds;
+  initialView?: Camera;
+  minZoom?: number;
+  maxZoom?: number;
+  sources: RasterSource[];
+  layers: MapLayer[];
+  styles?: Record<string, EntityStyle>;
+  entities: Entity[];
 }
 export interface MapDataSource {
   listMaps(context: { signal: AbortSignal }): Promise<readonly MapSummary[]>;
-  getSnapshot(request: { mapId: string; snapshotId?: string }, context: { signal: AbortSignal }): Promise<MapSnapshot>;
-  fetchAsset(ref: AssetRef, context: { mapId: string; snapshotId: string; signal: AbortSignal }): Promise<Blob>;
+  getSnapshot(
+    request: { mapId: string; snapshotId?: string },
+    context: { signal: AbortSignal },
+  ): Promise<MapSnapshot>;
+  fetchAsset(
+    ref: AssetRef,
+    context: { mapId: string; snapshotId: string; signal: AbortSignal },
+  ): Promise<Blob>;
 }
 export interface ViewState {
-  version: 1; mapId: string; snapshotId: string; camera?: Camera;
-  selectedEntityId?: string; layers?: Record<string, boolean>;
+  version: 1;
+  mapId: string;
+  snapshotId: string;
+  camera?: Camera;
+  selectedEntityId?: string;
+  layers?: Record<string, boolean>;
 }
-export type ViewCause = 'interaction' | 'api' | 'restore';
-export interface LayerState { id: string; visible: boolean; opacity: number }
+export type ViewCause = "interaction" | "api" | "restore";
+export interface LayerState {
+  id: string;
+  visible: boolean;
+  opacity: number;
+}
 export interface EngineState {
-  mapId?: string; snapshotId?: string; camera?: Camera; selectedEntityId?: string;
-  loading: boolean; layers: LayerState[];
+  mapId?: string;
+  snapshotId?: string;
+  camera?: Camera;
+  selectedEntityId?: string;
+  loading: boolean;
+  layers: LayerState[];
 }
-export interface Hit { entityIds: string[]; cluster: boolean }
+export interface Hit {
+  entityIds: string[];
+  cluster: boolean;
+}
 export interface EngineEvents {
   loadingchange: { loading: boolean; mapId: string };
   mapchange: { mapId: string; snapshotId: string };

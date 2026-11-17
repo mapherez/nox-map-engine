@@ -7,17 +7,9 @@
     "kind": "local",
     "units": "unit"
   },
-  "bounds": [
-    0,
-    0,
-    1000,
-    800
-  ],
+  "bounds": [0, 0, 1000, 800],
   "initialView": {
-    "center": [
-      500,
-      400
-    ],
+    "center": [500, 400],
     "zoom": -0.25
   },
   "sources": [
@@ -27,10 +19,7 @@
       "width": 1000,
       "height": 800,
       "unitsPerPixel": 1,
-      "origin": [
-        0,
-        0
-      ],
+      "origin": [0, 0],
       "asset": {
         "uri": "./base.svg"
       },
@@ -82,10 +71,7 @@
       "layerId": "points",
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          500,
-          400
-        ]
+        "coordinates": [500, 400]
       },
       "label": "Observatory",
       "metadata": {
@@ -108,48 +94,18 @@
         "type": "Polygon",
         "coordinates": [
           [
-            [
-              100,
-              100
-            ],
-            [
-              300,
-              100
-            ],
-            [
-              300,
-              300
-            ],
-            [
-              100,
-              300
-            ],
-            [
-              100,
-              100
-            ]
+            [100, 100],
+            [300, 100],
+            [300, 300],
+            [100, 300],
+            [100, 100]
           ],
           [
-            [
-              150,
-              150
-            ],
-            [
-              250,
-              150
-            ],
-            [
-              250,
-              250
-            ],
-            [
-              150,
-              250
-            ],
-            [
-              150,
-              150
-            ]
+            [150, 150],
+            [250, 150],
+            [250, 250],
+            [150, 250],
+            [150, 150]
           ]
         ]
       },
@@ -162,10 +118,7 @@
       "layerId": "points",
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          750,
-          280
-        ]
+        "coordinates": [750, 280]
       },
       "metadata": {
         "Category": "Harbor"
@@ -178,10 +131,7 @@
       "layerId": "points",
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          280,
-          520
-        ]
+        "coordinates": [280, 520]
       },
       "style": {
         "fill": "#ffc978"
@@ -196,10 +146,7 @@
       "layerId": "points",
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          690,
-          660
-        ]
+        "coordinates": [690, 660]
       },
       "description": "A landmark on the southern coast."
     },
@@ -209,10 +156,7 @@
       "layerId": "points",
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          420,
-          140
-        ]
+        "coordinates": [420, 140]
       },
       "metadata": {
         "Category": "Viewpoint"
@@ -227,50 +171,20 @@
         "coordinates": [
           [
             [
-              [
-                420,
-                300
-              ],
-              [
-                590,
-                280
-              ],
-              [
-                630,
-                460
-              ],
-              [
-                470,
-                490
-              ],
-              [
-                420,
-                300
-              ]
+              [420, 300],
+              [590, 280],
+              [630, 460],
+              [470, 490],
+              [420, 300]
             ]
           ],
           [
             [
-              [
-                600,
-                520
-              ],
-              [
-                680,
-                490
-              ],
-              [
-                710,
-                570
-              ],
-              [
-                650,
-                600
-              ],
-              [
-                600,
-                520
-              ]
+              [600, 520],
+              [680, 490],
+              [710, 570],
+              [650, 600],
+              [600, 520]
             ]
           ]
         ]

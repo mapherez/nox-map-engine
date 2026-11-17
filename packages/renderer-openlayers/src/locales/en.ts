@@ -1,1 +1,1 @@
-export const en = { interactiveMap: 'Interactive map' };
+export const en = { interactiveMap: "Interactive map" };
