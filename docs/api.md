@@ -30,12 +30,18 @@ Standalone usa replaceState para pan/zoom e pushState para mapa/selecção. Back
 ## Implementar MapDataSource
 
 ```ts
-import type { MapDataSource } from '@nox-map/core';
+import type { MapDataSource } from "@nox-map/core";
 
 const provider: MapDataSource = {
-  async listMaps({ signal }) { /* catálogo normalizado */ throw new Error('Implement'); },
-  async getSnapshot({ mapId, snapshotId }, { signal }) { /* snapshot completo */ throw new Error('Implement'); },
-  async fetchAsset({ uri }, { mapId, snapshotId, signal }) { /* Blob */ throw new Error('Implement'); }
+  async listMaps({ signal }) {
+    /* catálogo normalizado */ throw new Error("Implement");
+  },
+  async getSnapshot({ mapId, snapshotId }, { signal }) {
+    /* snapshot completo */ throw new Error("Implement");
+  },
+  async fetchAsset({ uri }, { mapId, snapshotId, signal }) {
+    /* Blob */ throw new Error("Implement");
+  },
 };
 ```
 

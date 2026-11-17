@@ -14,14 +14,14 @@
 
 Medição automatizada inicial no ambiente de desenvolvimento (2026-10-02), Chromium, tiles sintéticos em cache, gestos nativos de drag/wheel:
 
-| Métrica | Desktop 1440 × 1000 | Pixel 7 emulado |
-| --- | --- | --- |
-| FPS médio | 58,6 | 58,7 |
-| Frame time p95 | 16,8 ms | 16,7 ms |
-| Selecção p95 | 34,1 ms | 22,7 ms |
-| Aplicação do snapshot | 162,5 ms | 191,0 ms |
-| Heap JS incremental pós-GC | 77,2 MB | 72,0 MB |
-| Heap JS após 20 recarregamentos | 90,6 MB | 111,9 MB |
+| Métrica                         | Desktop 1440 × 1000 | Pixel 7 emulado |
+| ------------------------------- | ------------------- | --------------- |
+| FPS médio                       | 58,6                | 58,7            |
+| Frame time p95                  | 16,8 ms             | 16,7 ms         |
+| Selecção p95                    | 34,1 ms             | 22,7 ms         |
+| Aplicação do snapshot           | 162,5 ms            | 191,0 ms        |
+| Heap JS incremental pós-GC      | 77,2 MB             | 72,0 MB         |
+| Heap JS após 20 recarregamentos | 90,6 MB             | 111,9 MB        |
 
 Ambiente: Windows x64, Intel i7-11700K, 16 CPUs lógicos, 64 GiB RAM. Os resultados JSON incluem hardware, browser, viewport, DPR, data e notas da medição, e são recriados por `npm run benchmark`. As amostras após os ciclos 1, 5, 10 e 20 variaram menos de 1 MB, medidas após painting, pedidos cancelados em repouso e GC. O benchmark rejeita crescimento superior a 16 MiB entre os ciclos 5 e 20. Esta execução não certifica os limites de produção abaixo.
 

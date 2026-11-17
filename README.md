@@ -1,4 +1,3 @@
-
 # NoX Map Engine
 
 **Bring your maps to life.**
@@ -31,14 +30,14 @@ The engine can be embedded into an existing application or used through its incl
 
 NoX Map Engine is designed for projects where locations and spatial relationships are an important part of the experience.
 
-| Use case | Examples |
-| --- | --- |
-| **Fantasy worlds** | Interactive continents, kingdoms, settlements, landmarks, and points of interest. |
-| **Game maps** | Explorable game worlds with locations, regions, and contextual information. |
-| **Knowledge bases** | Maps connected to articles, documents, characters, or other structured content. |
-| **Geographic applications** | Real-world locations, coordinate-based markers, and geographic overlays. |
-| **Interactive diagrams** | Building plans, facility layouts, campuses, and custom spatial interfaces. |
-| **Embedded experiences** | Mapping interfaces integrated into websites, applications, and WebViews. |
+| Use case                    | Examples                                                                          |
+| --------------------------- | --------------------------------------------------------------------------------- |
+| **Fantasy worlds**          | Interactive continents, kingdoms, settlements, landmarks, and points of interest. |
+| **Game maps**               | Explorable game worlds with locations, regions, and contextual information.       |
+| **Knowledge bases**         | Maps connected to articles, documents, characters, or other structured content.   |
+| **Geographic applications** | Real-world locations, coordinate-based markers, and geographic overlays.          |
+| **Interactive diagrams**    | Building plans, facility layouts, campuses, and custom spatial interfaces.        |
+| **Embedded experiences**    | Mapping interfaces integrated into websites, applications, and WebViews.          |
 
 The engine does not impose domain-specific concepts such as kingdoms, cities, quests, or buildings.
 
@@ -281,12 +280,12 @@ Its rendering architecture includes:
 
 The repository includes a benchmark scenario with:
 
-| Benchmark dataset | Size |
-| --- | --- |
-| Map coordinate space | 50,000 × 50,000 units |
-| Markers | 10,000 |
-| Polygons | 1,000 |
-| Total polygon vertices | 101,000 |
+| Benchmark dataset      | Size                  |
+| ---------------------- | --------------------- |
+| Map coordinate space   | 50,000 × 50,000 units |
+| Markers                | 10,000                |
+| Polygons               | 1,000                 |
+| Total polygon vertices | 101,000               |
 
 Automated benchmarks and browser tests are available.
 
@@ -318,10 +317,10 @@ NoX Atlas includes:
 
 The repository includes two sample maps:
 
-| Map | Description |
-| --- | --- |
+| Map                    | Description                                                                                    |
+| ---------------------- | ---------------------------------------------------------------------------------------------- |
 | **Costa de Esmeralda** | An illustrated map demonstrating local coordinates, custom entities, layers, and interactions. |
-| **Lisboa** | A geographic map demonstrating real-world coordinates and XYZ map tiles. |
+| **Lisboa**             | A geographic map demonstrating real-world coordinates and XYZ map tiles.                       |
 
 The illustrated map can run using local assets.
 
@@ -451,32 +450,32 @@ NoX Map Engine is also available as a collection of reusable TypeScript packages
 After building the local packages and making them available to your application, create a map engine instance:
 
 ```typescript id="q42rby"
-import { createMapEngine } from '@nox-map/engine';
-import { StaticHttpDataSource } from '@nox-map/data-source-static';
-import '@nox-map/engine/style.css';
+import { createMapEngine } from "@nox-map/engine";
+import { StaticHttpDataSource } from "@nox-map/data-source-static";
+import "@nox-map/engine/style.css";
 
 const engine = createMapEngine({
-  container: document.querySelector<HTMLElement>('#map')!,
+  container: document.querySelector<HTMLElement>("#map")!,
   dataSource: new StaticHttpDataSource({
-    catalogUrl: '/maps/catalog.json'
+    catalogUrl: "/maps/catalog.json",
   }),
-  gestures: 'cooperative'
+  gestures: "cooperative",
 });
 
-const unsubscribe = engine.on('selectionchange', ({ entity }) => {
+const unsubscribe = engine.on("selectionchange", ({ entity }) => {
   if (!entity) return;
 
-  console.log('Selected:', entity.label);
-  console.log('Metadata:', entity.metadata);
-  console.log('Content:', entity.contentRefs);
+  console.log("Selected:", entity.label);
+  console.log("Metadata:", entity.metadata);
+  console.log("Content:", entity.contentRefs);
 });
 
-await engine.loadMap('my-world');
+await engine.loadMap("my-world");
 
 // Navigate to a position.
 engine.setView({
   center: [500, 400],
-  zoom: 1
+  zoom: 1,
 });
 
 // Save the current view state.
@@ -497,24 +496,24 @@ Those responsibilities remain with the host application.
 
 The public API provides methods for navigation, inspection, interaction, and session updates.
 
-| Method | Purpose |
-| --- | --- |
-| `loadMap()` | Load a map and its snapshot. |
-| `getState()` | Get the current engine state. |
-| `getMap()` | Read the active map definition. |
-| `getEntities()` | Retrieve map entities. |
-| `setView()` | Change the camera position and zoom. |
-| `fitBounds()` | Fit the map or a defined area into view. |
-| `focusEntity()` | Navigate to an entity. |
-| `selectEntity()` | Select an entity. |
-| `pick()` | Find entities at a screen position. |
-| `setLayerVisibility()` | Show or hide a layer. |
-| `setLayerOpacity()` | Change a layer's opacity. |
-| `upsertEntities()` | Add or update session entities. |
-| `removeEntities()` | Remove session entities. |
-| `serializeViewState()` | Create a shareable navigation state. |
-| `applyViewState()` | Restore a saved navigation state. |
-| `destroy()` | Release engine resources. |
+| Method                 | Purpose                                  |
+| ---------------------- | ---------------------------------------- |
+| `loadMap()`            | Load a map and its snapshot.             |
+| `getState()`           | Get the current engine state.            |
+| `getMap()`             | Read the active map definition.          |
+| `getEntities()`        | Retrieve map entities.                   |
+| `setView()`            | Change the camera position and zoom.     |
+| `fitBounds()`          | Fit the map or a defined area into view. |
+| `focusEntity()`        | Navigate to an entity.                   |
+| `selectEntity()`       | Select an entity.                        |
+| `pick()`               | Find entities at a screen position.      |
+| `setLayerVisibility()` | Show or hide a layer.                    |
+| `setLayerOpacity()`    | Change a layer's opacity.                |
+| `upsertEntities()`     | Add or update session entities.          |
+| `removeEntities()`     | Remove session entities.                 |
+| `serializeViewState()` | Create a shareable navigation state.     |
+| `applyViewState()`     | Restore a saved navigation state.        |
+| `destroy()`            | Release engine resources.                |
 
 The engine also exposes typed events for map changes, selection, navigation, entity updates, loading, errors, and other interactions.
 
@@ -534,11 +533,11 @@ This starts a local Vite server for the integration examples. It does not deploy
 
 Open:
 
-| Example | URL |
-| --- | --- |
-| Vanilla Web | <http://127.0.0.1:5174/web/> |
-| React | <http://127.0.0.1:5174/react/> |
-| WebView | <http://127.0.0.1:5174/webview/> |
+| Example     | URL                              |
+| ----------- | -------------------------------- |
+| Vanilla Web | <http://127.0.0.1:5174/web/>     |
+| React       | <http://127.0.0.1:5174/react/>   |
+| WebView     | <http://127.0.0.1:5174/webview/> |
 
 These examples demonstrate how applications can initialize the engine, provide map data, receive selection events, and manage its lifecycle.
 
@@ -548,14 +547,14 @@ These examples demonstrate how applications can initialize the engine, provide m
 
 NoX Map Engine uses a modular package architecture.
 
-| Package | Responsibility |
-| --- | --- |
-| `@nox-map/core` | Shared types, validation, coordinates, GeoJSON support, and view-state serialization. |
-| `@nox-map/engine` | Map lifecycle, application state, events, and high-level operations. |
-| `@nox-map/renderer-openlayers` | Rendering, navigation, picking, and spatial visualization. |
-| `@nox-map/data-source-static` | Static HTTP and in-memory data providers. |
-| `@nox-map/controls` | Optional navigation controls, tooltips, and entity details. |
-| `@nox-map/cli` | Raster preparation and tile generation. |
+| Package                        | Responsibility                                                                        |
+| ------------------------------ | ------------------------------------------------------------------------------------- |
+| `@nox-map/core`                | Shared types, validation, coordinates, GeoJSON support, and view-state serialization. |
+| `@nox-map/engine`              | Map lifecycle, application state, events, and high-level operations.                  |
+| `@nox-map/renderer-openlayers` | Rendering, navigation, picking, and spatial visualization.                            |
+| `@nox-map/data-source-static`  | Static HTTP and in-memory data providers.                                             |
+| `@nox-map/controls`            | Optional navigation controls, tooltips, and entity details.                           |
+| `@nox-map/cli`                 | Raster preparation and tile generation.                                               |
 
 The architecture separates three responsibilities:
 

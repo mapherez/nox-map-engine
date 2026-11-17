@@ -4,10 +4,14 @@
 
 ```json
 {
-  "maps": [{
-    "mapId": "floor", "title": "Planta", "currentSnapshotId": "base",
-    "snapshots": { "base": "./floor/map.json" }
-  }]
+  "maps": [
+    {
+      "mapId": "floor",
+      "title": "Planta",
+      "currentSnapshotId": "base",
+      "snapshots": { "base": "./floor/map.json" }
+    }
+  ]
 }
 ```
 
@@ -17,25 +21,56 @@
 
 ```json
 {
-  "schemaVersion": 1, "mapId": "floor", "snapshotId": "base", "title": "Planta",
+  "schemaVersion": 1,
+  "mapId": "floor",
+  "snapshotId": "base",
+  "title": "Planta",
   "coordinateSystem": { "kind": "local", "units": "metres" },
   "bounds": [0, 0, 100, 80],
   "initialView": { "center": [50, 40], "zoom": 2 },
-  "sources": [{
-    "id": "raster", "type": "raster-pyramid", "template": "./tiles/{z}/{x}/{y}.png",
-    "origin": [0, 0], "width": 10000, "height": 8000,
-    "unitsPerPixel": 0.01, "tileSize": 256, "maxLevel": 6
-  }],
-  "layers": [
-    { "id": "base", "title": "Base", "type": "raster", "sourceId": "raster", "order": 0, "visible": true, "opacity": 1 },
-    { "id": "poi", "title": "Pontos", "type": "vector", "order": 1, "visible": true, "opacity": 1, "cluster": { "distance": 40 } }
+  "sources": [
+    {
+      "id": "raster",
+      "type": "raster-pyramid",
+      "template": "./tiles/{z}/{x}/{y}.png",
+      "origin": [0, 0],
+      "width": 10000,
+      "height": 8000,
+      "unitsPerPixel": 0.01,
+      "tileSize": 256,
+      "maxLevel": 6
+    }
   ],
-  "entities": [{
-    "id": "entrance", "layerId": "poi", "label": "Entrada",
-    "geometry": { "type": "Point", "coordinates": [12, 20] },
-    "metadata": { "category": "access" },
-    "contentRefs": [{ "type": "document", "ref": "document-id", "title": "Detalhes" }]
-  }]
+  "layers": [
+    {
+      "id": "base",
+      "title": "Base",
+      "type": "raster",
+      "sourceId": "raster",
+      "order": 0,
+      "visible": true,
+      "opacity": 1
+    },
+    {
+      "id": "poi",
+      "title": "Pontos",
+      "type": "vector",
+      "order": 1,
+      "visible": true,
+      "opacity": 1,
+      "cluster": { "distance": 40 }
+    }
+  ],
+  "entities": [
+    {
+      "id": "entrance",
+      "layerId": "poi",
+      "label": "Entrada",
+      "geometry": { "type": "Point", "coordinates": [12, 20] },
+      "metadata": { "category": "access" },
+      "contentRefs": [{ "type": "document", "ref": "document-id", "title": "Detalhes" }]
+    }
+  ]
 }
 ```
 
